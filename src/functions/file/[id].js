@@ -2,13 +2,13 @@ export async function fileHandler(c) {
     const env = c.env;
     const id = c.req.param('id');
     const url = new URL(c.req.url);
-    
+
     try {
         // 尝试处理通过Telegram Bot API上传的文件
-        if (id.length > 30) { // 长ID通常代表通过Bot上传的文件
+        if (id.length > 30 || id.includes('.')) { // 长ID通常代表通过Bot上传的文件，或包含扩展名的文件
             const fileId = id.split('.')[0]; // 分离文件ID和扩展名
             const filePath = await getFilePath(env, fileId);
-            
+
             if (filePath) {
                 const telegramFileUrl = `https://api.telegram.org/file/bot${env.TG_Bot_Token}/${filePath}`;
                 return await proxyFile(c, telegramFileUrl);
@@ -18,11 +18,11 @@ export async function fileHandler(c) {
             const telegraphUrl = `https://telegra.ph/file/${id}`;
             return await proxyFile(c, telegraphUrl);
         }
-        
+
         // 处理KV元数据
         if (env.img_url) {
             let record = await env.img_url.getWithMetadata(id);
-            
+
             if (!record || !record.metadata) {
                 // 初始化元数据（如不存在）
                 record = {
@@ -37,7 +37,7 @@ export async function fileHandler(c) {
                 };
                 await env.img_url.put(id, "", { metadata: record.metadata });
             }
-            
+
             const metadata = {
                 ListType: record.metadata.ListType || "None",
                 Label: record.metadata.Label || "None",
@@ -46,7 +46,7 @@ export async function fileHandler(c) {
                 fileName: record.metadata.fileName || id,
                 fileSize: record.metadata.fileSize || 0,
             };
-            
+
             // 根据ListType和Label处理
             if (metadata.ListType === "Block" || metadata.Label === "adult") {
                 const referer = c.req.header('Referer');
@@ -56,11 +56,11 @@ export async function fileHandler(c) {
                     return c.redirect('/block-img.html');
                 }
             }
-            
+
             // 保存元数据
             await env.img_url.put(id, "", { metadata });
         }
-        
+
         // 如果所有尝试都失败，返回404
         return c.text('文件不存在', 404);
     } catch (error) {
@@ -78,15 +78,15 @@ async function getFilePath(env, fileId) {
         const res = await fetch(url, {
             method: 'GET',
         });
-        
+
         if (!res.ok) {
             console.error(`HTTP错误! 状态: ${res.status}`);
             return null;
         }
-        
+
         const responseData = await res.json();
         const { ok, result } = responseData;
-        
+
         if (ok && result) {
             return result.file_path;
         } else {
@@ -107,21 +107,44 @@ async function proxyFile(c, fileUrl) {
         method: c.req.method,
         headers: c.req.headers
     });
-    
+
     if (!response.ok) {
         return c.text('文件获取失败', response.status);
     }
-    
+
     const headers = new Headers();
     response.headers.forEach((value, key) => {
         headers.set(key, value);
     });
-    
+
     // 添加缓存控制
     headers.set('Cache-Control', 'public, max-age=31536000');
-    
+
+    // 确保设置正确的Content-Type，以便浏览器能够预览图片
+    const contentType = response.headers.get('Content-Type');
+    if (contentType) {
+        headers.set('Content-Type', contentType);
+    } else {
+        // 根据URL推断内容类型
+        const fileExtension = fileUrl.split('.').pop().toLowerCase();
+        if (['jpg', 'jpeg'].includes(fileExtension)) {
+            headers.set('Content-Type', 'image/jpeg');
+        } else if (fileExtension === 'png') {
+            headers.set('Content-Type', 'image/png');
+        } else if (fileExtension === 'gif') {
+            headers.set('Content-Type', 'image/gif');
+        } else if (fileExtension === 'webp') {
+            headers.set('Content-Type', 'image/webp');
+        } else if (fileExtension === 'svg') {
+            headers.set('Content-Type', 'image/svg+xml');
+        }
+    }
+
+    // 移除Content-Disposition头或设置为inline，确保浏览器预览而不是下载
+    headers.set('Content-Disposition', 'inline');
+
     return new Response(response.body, {
         status: response.status,
         headers
     });
-} 
+}

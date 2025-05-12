@@ -134,5 +134,5 @@ npm run dev
 
 如有问题或建议，请通过以下方式联系我们:
 
-- 创建 [Issue](https://github.com/xiyewuqiu/new-lmage)
+- 创建 [Issue](https://github.com/xiyewuqiu/new-lmage/issues)
 - 发送邮件至: xiyewuqiu@gmail.com
