@@ -1,4 +1,36 @@
+// 页面加载动画
+window.addEventListener('load', () => {
+    const pageLoader = document.getElementById('pageLoader');
+    const progressBar = document.getElementById('loaderProgressBar');
+
+    // 模拟加载进度
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += Math.random() * 10;
+        if (progress >= 100) {
+            progress = 100;
+            clearInterval(interval);
+
+            // 完成加载后延迟一小段时间再隐藏加载器
+            setTimeout(() => {
+                pageLoader.classList.add('loaded');
+
+                // 页面内容淡入动画
+                document.querySelectorAll('.fade-in-element').forEach((el, index) => {
+                    setTimeout(() => {
+                        el.classList.add('visible');
+                    }, 100 * index);
+                });
+            }, 400);
+        }
+        progressBar.style.width = `${progress}%`;
+    }, 100);
+});
+
 document.addEventListener('DOMContentLoaded', () => {
+    // 初始化页面加载动画
+    initPageLoader();
+
     // 初始化主题
     initTheme();
 
@@ -10,7 +42,102 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 初始化图片预览
     initImagePreview();
+
+    // 初始化滚动动画
+    initScrollAnimations();
+
+    // 初始化平滑滚动
+    initSmoothScroll();
+
+    // 初始化粒子背景
+    initParticles();
+
+    // 初始化3D卡片效果
+    init3DCards();
+
+    // 初始化滚动进度条
+    initScrollProgress();
+
+    // 初始化返回顶部按钮
+    initBackToTop();
 });
+
+// 滚动动画初始化
+function initScrollAnimations() {
+    // 添加滚动动画类
+    const animationElements = [
+        { selector: '.feature-card:nth-child(1)', animation: 'from-left' },
+        { selector: '.feature-card:nth-child(2)', animation: 'fade-in' },
+        { selector: '.feature-card:nth-child(3)', animation: 'from-right' },
+        { selector: '.hero-content', animation: 'scale-in' },
+        { selector: '.upload-area', animation: 'from-bottom' }
+    ];
+
+    // 添加动画类
+    animationElements.forEach(item => {
+        document.querySelectorAll(item.selector).forEach(el => {
+            el.classList.add('scroll-animation', item.animation);
+        });
+    });
+
+    // 检查元素是否在视口中
+    function checkInView() {
+        const elements = document.querySelectorAll('.scroll-animation');
+        const windowHeight = window.innerHeight;
+
+        elements.forEach(element => {
+            const elementPosition = element.getBoundingClientRect();
+            // 当元素进入视口时添加可见类
+            if (elementPosition.top < windowHeight * 0.9) {
+                element.classList.add('visible');
+            }
+        });
+    }
+
+    // 初始检查
+    setTimeout(checkInView, 100);
+
+    // 滚动时检查
+    window.addEventListener('scroll', checkInView);
+}
+
+// 平滑滚动初始化
+function initSmoothScroll() {
+    // 为所有内部链接添加平滑滚动
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+}
+
+// 页面加载初始化
+function initPageLoader() {
+    // 为主要元素添加淡入动画类
+    const fadeElements = [
+        '.hero',
+        '.upload-container',
+        '.features',
+        '.footer'
+    ];
+
+    fadeElements.forEach(selector => {
+        document.querySelectorAll(selector).forEach(el => {
+            el.classList.add('fade-in-element');
+        });
+    });
+}
 
 // 主题切换功能
 function initTheme() {
@@ -285,4 +412,222 @@ function initImagePreview() {
             });
         });
     }
+}
+
+// 粒子背景初始化
+function initParticles() {
+    const particlesContainer = document.getElementById('particles');
+    if (!particlesContainer) return;
+
+    const particleCount = 50; // 粒子数量
+    const particleColors = ['rgba(255, 255, 255, 0.3)', 'rgba(255, 255, 255, 0.2)', 'rgba(255, 255, 255, 0.1)'];
+
+    // 创建粒子
+    for (let i = 0; i < particleCount; i++) {
+        createParticle(particlesContainer, particleColors);
+    }
+
+    // 创建单个粒子
+    function createParticle(container, colors) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+
+        // 随机大小
+        const size = Math.random() * 5 + 2;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+
+        // 随机位置
+        const posX = Math.random() * 100;
+        const posY = Math.random() * 100;
+        particle.style.left = `${posX}%`;
+        particle.style.top = `${posY}%`;
+
+        // 随机颜色
+        const colorIndex = Math.floor(Math.random() * colors.length);
+        particle.style.backgroundColor = colors[colorIndex];
+
+        // 随机动画
+        const duration = Math.random() * 20 + 10;
+        const delay = Math.random() * 5;
+
+        // 添加动画
+        particle.style.animation = `float ${duration}s ${delay}s infinite linear`;
+
+        // 添加到容器
+        container.appendChild(particle);
+
+        // 创建动画关键帧
+        const keyframes = `
+            @keyframes float {
+                0% {
+                    transform: translate(0, 0) rotate(0deg);
+                    opacity: ${Math.random() * 0.5 + 0.3};
+                }
+                25% {
+                    transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) rotate(${Math.random() * 360}deg);
+                    opacity: ${Math.random() * 0.5 + 0.3};
+                }
+                50% {
+                    transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) rotate(${Math.random() * 360}deg);
+                    opacity: ${Math.random() * 0.5 + 0.3};
+                }
+                75% {
+                    transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) rotate(${Math.random() * 360}deg);
+                    opacity: ${Math.random() * 0.5 + 0.3};
+                }
+                100% {
+                    transform: translate(0, 0) rotate(0deg);
+                    opacity: ${Math.random() * 0.5 + 0.3};
+                }
+            }
+        `;
+
+        // 添加样式
+        const style = document.createElement('style');
+        style.textContent = keyframes;
+        document.head.appendChild(style);
+    }
+}
+
+// 3D卡片效果初始化
+function init3DCards() {
+    const cards = document.querySelectorAll('.feature-card');
+
+    cards.forEach(card => {
+        // 鼠标移动效果
+        card.addEventListener('mousemove', handleCardMove);
+        // 鼠标离开效果
+        card.addEventListener('mouseleave', handleCardLeave);
+    });
+
+    // 处理卡片移动
+    function handleCardMove(e) {
+        const card = this;
+        const cardRect = card.getBoundingClientRect();
+        const cardContent = card.querySelector('.card-content');
+
+        // 计算鼠标在卡片上的相对位置 (从-1到1)
+        const x = ((e.clientX - cardRect.left) / cardRect.width) * 2 - 1;
+        const y = ((e.clientY - cardRect.top) / cardRect.height) * 2 - 1;
+
+        // 根据鼠标位置计算旋转角度 (最大5度)
+        const rotateY = x * 5;
+        const rotateX = -y * 5;
+
+        // 应用3D变换
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(0)`;
+
+        // 内容的反向移动，创造视差效果
+        if (cardContent) {
+            cardContent.style.transform = `translateZ(20px) translateX(${-x * 10}px) translateY(${-y * 10}px)`;
+        }
+
+        // 动态光影效果
+        const glare = card.querySelector('.card-glare') || createGlare(card);
+        const glareOpacity = Math.sqrt(x*x + y*y) * 0.1 + 0.05;
+        const glarePosition = {
+            x: (x + 1) / 2 * 100,
+            y: (y + 1) / 2 * 100
+        };
+
+        glare.style.background = `radial-gradient(circle at ${glarePosition.x}% ${glarePosition.y}%, rgba(255,255,255,${glareOpacity}), transparent 50%)`;
+    }
+
+    // 处理卡片离开
+    function handleCardLeave() {
+        const card = this;
+        const cardContent = card.querySelector('.card-content');
+
+        // 重置卡片样式
+        card.style.transform = '';
+
+        if (cardContent) {
+            cardContent.style.transform = '';
+        }
+
+        // 重置光影效果
+        const glare = card.querySelector('.card-glare');
+        if (glare) {
+            glare.style.background = 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.03), transparent 50%)';
+        }
+    }
+
+    // 创建光影效果元素
+    function createGlare(card) {
+        const glare = document.createElement('div');
+        glare.className = 'card-glare';
+        glare.style.position = 'absolute';
+        glare.style.top = '0';
+        glare.style.left = '0';
+        glare.style.width = '100%';
+        glare.style.height = '100%';
+        glare.style.borderRadius = 'inherit';
+        glare.style.pointerEvents = 'none';
+        glare.style.zIndex = '1';
+
+        card.appendChild(glare);
+        return glare;
+    }
+}
+
+// 滚动进度条初始化
+function initScrollProgress() {
+    const progressBar = document.getElementById('scrollProgress');
+    if (!progressBar) return;
+
+    // 更新进度条
+    function updateProgress() {
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrollPercentage = (scrollTop / scrollHeight) * 100;
+
+        progressBar.style.width = `${scrollPercentage}%`;
+
+        // 根据滚动位置调整进度条颜色
+        const hue = 220 + (scrollPercentage * 0.4); // 从蓝色到紫色的渐变
+        progressBar.style.background = `linear-gradient(to right, hsl(${hue}, 80%, 60%), hsl(${hue + 20}, 80%, 50%))`;
+    }
+
+    // 初始更新
+    updateProgress();
+
+    // 滚动时更新
+    window.addEventListener('scroll', updateProgress);
+
+    // 窗口大小改变时更新
+    window.addEventListener('resize', updateProgress);
+}
+
+// 返回顶部按钮初始化
+function initBackToTop() {
+    const backToTopBtn = document.getElementById('backToTop');
+    if (!backToTopBtn) return;
+
+    // 显示/隐藏按钮
+    function toggleBackToTopButton() {
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+
+        // 当滚动超过300px时显示按钮
+        if (scrollTop > 300) {
+            backToTopBtn.classList.add('visible');
+        } else {
+            backToTopBtn.classList.remove('visible');
+        }
+    }
+
+    // 点击返回顶部
+    backToTopBtn.addEventListener('click', () => {
+        // 平滑滚动到顶部
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+
+    // 初始检查
+    toggleBackToTopButton();
+
+    // 滚动时检查
+    window.addEventListener('scroll', toggleBackToTopButton);
 }

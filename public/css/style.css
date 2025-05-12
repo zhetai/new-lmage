@@ -271,6 +271,25 @@ body.dark-mode .theme-toggle:hover {
     z-index: 1;
 }
 
+/* 粒子背景 */
+.particles-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.particle {
+    position: absolute;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.3);
+    pointer-events: none;
+    z-index: 0;
+}
+
 @keyframes pulse {
     0% {
         transform: translate(0, 0);
@@ -332,10 +351,12 @@ body.dark-mode .upload-container {
     transition: all var(--transition);
     position: relative;
     overflow: hidden;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
 }
 
 body.dark-mode .upload-area {
     border-color: var(--dark-border);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
 
 .upload-area::before {
@@ -350,15 +371,37 @@ body.dark-mode .upload-area {
     transition: opacity var(--transition);
 }
 
+.upload-area::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+        rgba(255, 255, 255, 0),
+        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0));
+    transform: skewX(-15deg);
+    transition: all 0.8s;
+    z-index: 1;
+    pointer-events: none;
+}
+
 .upload-area:hover::before,
 .upload-area.drag-over::before {
     opacity: 1;
 }
 
+.upload-area:hover::after {
+    left: 100%;
+}
+
 .upload-area:hover,
 .upload-area.drag-over {
     border-color: var(--primary-color);
-    transform: translateY(-2px);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(var(--primary-light-rgb), 0.2);
 }
 
 .upload-icon {
@@ -650,6 +693,8 @@ body.dark-mode .copy-container input {
     overflow: hidden;
     z-index: 1;
     border: 1px solid transparent;
+    transform-style: preserve-3d;
+    perspective: 1000px;
 }
 
 body.dark-mode .feature-card {
@@ -670,14 +715,42 @@ body.dark-mode .feature-card {
     z-index: -1;
 }
 
+.feature-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(var(--primary-light-rgb), 0.08) 0%, transparent 70%);
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.5s ease;
+    z-index: -1;
+}
+
 .feature-card:hover {
-    transform: translateY(-8px);
+    transform: translateY(-8px) rotateX(3deg) rotateY(3deg);
     box-shadow: var(--shadow-lg);
     border-color: rgba(var(--primary-light-rgb), 0.1);
 }
 
 .feature-card:hover::before {
     opacity: 1;
+}
+
+.feature-card:hover::after {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.feature-card .card-content {
+    transition: transform var(--transition);
+    transform: translateZ(0);
+}
+
+.feature-card:hover .card-content {
+    transform: translateZ(10px);
 }
 
 .feature-icon {
@@ -1035,4 +1108,176 @@ body.dark-mode .footer {
 .nav-container {
     display: flex;
     align-items: center;
+}
+
+/* 页面加载动画 */
+.page-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+body.dark-mode .page-loader {
+    background-color: var(--dark-bg);
+}
+
+.page-loader.loaded {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loader-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.loader-logo {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 20px;
+    animation: pulse-fade 1.5s infinite alternate;
+}
+
+.loader-progress {
+    width: 200px;
+    height: 4px;
+    background-color: rgba(var(--primary-light-rgb), 0.2);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.loader-progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0;
+    background: var(--primary-gradient);
+    border-radius: 4px;
+    transition: width 0.4s ease;
+}
+
+@keyframes pulse-fade {
+    0% {
+        opacity: 0.6;
+        transform: scale(0.98);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* 淡入动画 */
+.fade-in-element {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.fade-in-element.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 滚动动画 */
+.scroll-animation {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.scroll-animation.from-left {
+    transform: translateX(-50px);
+}
+
+.scroll-animation.from-right {
+    transform: translateX(50px);
+}
+
+.scroll-animation.from-bottom {
+    transform: translateY(50px);
+}
+
+.scroll-animation.fade-in {
+    opacity: 0;
+    transform: translateY(0);
+}
+
+.scroll-animation.scale-in {
+    opacity: 0;
+    transform: scale(0.9);
+}
+
+.scroll-animation.visible {
+    opacity: 1;
+    transform: translate(0) scale(1);
+}
+
+/* 页面滚动进度条 */
+.scroll-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: transparent;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.scroll-progress-bar {
+    height: 100%;
+    width: 0;
+    background: var(--primary-gradient);
+    transition: width 0.1s;
+}
+
+/* 返回顶部按钮 */
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--primary-gradient);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    z-index: 99;
+}
+
+.back-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.back-to-top:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(var(--primary-light-rgb), 0.4);
+}
+
+.back-to-top svg {
+    width: 24px;
+    height: 24px;
+    stroke: white;
 }
