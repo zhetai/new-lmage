@@ -60,6 +60,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 初始化返回顶部按钮
     initBackToTop();
+
+    // 初始化移动端菜单
+    initMobileMenu();
 });
 
 // 滚动动画初始化
@@ -394,6 +397,70 @@ function initImagePreview() {
             document.body.appendChild(fullscreenPreview);
             document.body.style.overflow = 'hidden';
 
+            // 获取预览图片元素
+            const previewFullImg = fullscreenPreview.querySelector('img');
+
+            // 添加双指缩放功能（移动端）
+            let initialPinchDistance = 0;
+            let currentScale = 1;
+
+            // 处理双指触摸开始
+            previewFullImg.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 2) {
+                    e.preventDefault();
+                    initialPinchDistance = getPinchDistance(e);
+                }
+            }, { passive: false });
+
+            // 处理双指触摸移动
+            previewFullImg.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 2) {
+                    e.preventDefault();
+                    const currentPinchDistance = getPinchDistance(e);
+
+                    if (initialPinchDistance > 0) {
+                        const newScale = currentScale * (currentPinchDistance / initialPinchDistance);
+                        // 限制缩放范围
+                        if (newScale >= 0.5 && newScale <= 3) {
+                            currentScale = newScale;
+                            previewFullImg.style.transform = `scale(${currentScale})`;
+                        }
+                    }
+
+                    initialPinchDistance = currentPinchDistance;
+                }
+            }, { passive: false });
+
+            // 计算双指之间的距离
+            function getPinchDistance(e) {
+                return Math.hypot(
+                    e.touches[0].pageX - e.touches[1].pageX,
+                    e.touches[0].pageY - e.touches[1].pageY
+                );
+            }
+
+            // 双击缩放功能
+            let lastTapTime = 0;
+            previewFullImg.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                const currentTime = new Date().getTime();
+                const tapLength = currentTime - lastTapTime;
+
+                if (tapLength < 300 && tapLength > 0) {
+                    // 双击切换缩放
+                    if (currentScale === 1) {
+                        currentScale = 2;
+                    } else {
+                        currentScale = 1;
+                    }
+                    previewFullImg.style.transform = `scale(${currentScale})`;
+                    e.preventDefault();
+                }
+
+                lastTapTime = currentTime;
+            });
+
             // 添加关闭功能
             fullscreenPreview.addEventListener('click', (e) => {
                 if (e.target === fullscreenPreview || e.target.classList.contains('close-preview')) {
@@ -630,4 +697,73 @@ function initBackToTop() {
 
     // 滚动时检查
     window.addEventListener('scroll', toggleBackToTopButton);
+}
+
+// 移动端菜单初始化
+function initMobileMenu() {
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenuCloseBtn = document.getElementById('mobileMenuCloseBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+
+    if (!mobileMenuBtn || !mobileMenu) return;
+
+    // 打开菜单
+    mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.add('active');
+        mobileMenuOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden'; // 防止背景滚动
+    });
+
+    // 关闭菜单的函数
+    const closeMenu = () => {
+        mobileMenu.classList.remove('active');
+        mobileMenuOverlay.classList.remove('active');
+        document.body.style.overflow = ''; // 恢复滚动
+    };
+
+    // 关闭按钮点击事件
+    if (mobileMenuCloseBtn) {
+        mobileMenuCloseBtn.addEventListener('click', closeMenu);
+    }
+
+    // 遮罩点击关闭
+    if (mobileMenuOverlay) {
+        mobileMenuOverlay.addEventListener('click', closeMenu);
+    }
+
+    // 移动端菜单链接点击后关闭菜单
+    const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+    mobileNavLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            // 如果是内部链接，关闭菜单
+            if (!link.getAttribute('href').startsWith('http')) {
+                closeMenu();
+            }
+        });
+    });
+
+    // 监听窗口大小变化，在大屏幕上自动关闭移动菜单
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768 && mobileMenu.classList.contains('active')) {
+            closeMenu();
+        }
+    });
+
+    // 添加触摸滑动关闭菜单功能
+    let touchStartX = 0;
+
+    mobileMenu.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    mobileMenu.addEventListener('touchend', (e) => {
+        const touchEndX = e.changedTouches[0].screenX;
+        const touchDiff = touchEndX - touchStartX;
+
+        // 向右滑动超过50px时关闭菜单
+        if (touchDiff > 50) {
+            closeMenu();
+        }
+    }, { passive: true });
 }
