@@ -126,7 +126,9 @@ npm run dev
 ## 📸 界面预览
 
 <div align="center">
-  <img src="https://bed.djxs.xyz/file/AgACAgUAAyEGAASVl6k_AAMPaCIG-4ISeoWZZbd7xxfzUJY177wAAsXEMRuQGRBVftlJOuJG2qABAAMCAAN3AAM2BA.png" alt="TG-Image 界面预览" width="80%">
+
+  ![TG-Image 现代化界面展示（暗色模式）](https://bed.djxs.xyz/file/AgACAgUAAyEGAASVl6k_AAMPaCIG-4ISeoWZZbd7xxfzUJY177wAAsXEMRuQGRBVftlJOuJG2qABAAMCAAN3AAM2BA.png)
+
   <p><i>TG-Image 现代化界面展示（暗色模式）</i></p>
 </div>
 

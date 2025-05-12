@@ -357,9 +357,27 @@ function initUpload() {
         htmlCode.value = `<img src="${fileUrl}" alt="${file.name}" />`;
         mdCode.value = `![${file.name}](${fileUrl})`;
 
+        // 添加点击事件，使链接在新窗口中打开图片而不是下载
+        directLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.open(fileUrl, '_blank');
+        });
+
         // 隐藏上传区域，显示结果
         dropArea.style.display = 'none';
         resultContainer.style.display = 'block';
+
+        // 添加复制按钮的点击事件，使其在复制后自动在新窗口中打开图片预览
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                setTimeout(() => {
+                    const previewWindow = window.open(fileUrl, '_blank');
+                    if (previewWindow) {
+                        previewWindow.focus();
+                    }
+                }, 500);
+            });
+        });
     }
 
     // 再次上传
