@@ -1,20 +1,36 @@
-Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0)
+GNU Affero General Public License v3.0 with Commons Clause
 
-This is a human-readable summary of (and not a substitute for) the license.
+This software is licensed under the GNU Affero General Public License version 3.0 (AGPL-3.0) with the Commons Clause restriction.
 
-You are free to:
-- Share — copy and redistribute the material in any medium or format
-- Adapt — remix, transform, and build upon the material
+# Commons Clause - Restriction
 
-Under the following terms:
-- Attribution — You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
-- NonCommercial — You may not use the material for commercial purposes.
-- ShareAlike — If you remix, transform, or build upon the material, you must distribute your contributions under the same license as the original.
-- No additional restrictions — You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.
+"Commons Clause" License Condition v1.0
 
-Notices:
-- You do not have to comply with the license for elements of the material in the public domain or where your use is permitted by an applicable exception or limitation.
-- No warranties are given. The license may not give you all of the permissions necessary for your intended use. For example, other rights such as publicity, privacy, or moral rights may limit how you use the material.
+The Software is provided to you by the Licensor under the License, as defined below, subject to the following condition.
 
-For the full license text, please visit:
-https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
+Without limiting other conditions in the License, the grant of rights under the License will not include, and the License does not grant to you, the right to Sell the Software.
+
+For purposes of the foregoing, "Sell" means practicing any or all of the rights granted to you under the License to provide to third parties, for a fee or other consideration (including without limitation fees for hosting or consulting/support services related to the Software), a product or service whose value derives, entirely or substantially, from the functionality of the Software. Any license notice or attribution required by the License must also include this Commons Clause License Condition notice.
+
+# GNU Affero General Public License v3.0
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+# Summary of Key Terms
+
+This is a human-readable summary of (and not a substitute for) the license:
+
+- **强制开源**：任何对本软件的修改或衍生作品必须以相同的许可证（AGPL-3.0）开源
+- **网络使用也视为分发**：即使通过网络提供服务，也必须开源您的修改
+- **禁止商业使用**：根据Commons Clause限制，禁止将本软件或其任何部分用于商业目的
+- **专利授权**：授予使用者在该软件相关的专利上的权利
+- **无担保声明**：软件按"原样"提供，不提供任何形式的担保
+
+注意：如需商业使用，请联系项目作者获取商业许可。
+
+For the full license text of the GNU Affero General Public License v3.0, please visit:
+https://www.gnu.org/licenses/agpl-3.0.html
