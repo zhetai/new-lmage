@@ -101,6 +101,7 @@ async function getFilePath(env, fileId) {
 
 /**
  * 代理文件请求
+ * 直接传递原始文件内容，不进行压缩，确保原图质量
  */
 async function proxyFile(c, fileUrl) {
     const response = await fetch(fileUrl, {
