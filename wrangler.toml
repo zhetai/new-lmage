@@ -1,0 +1,15 @@
+name = "tg-image"
+type = "javascript"
+compatibility_date = "2023-01-01"
+
+[vars]
+# 可以在这里设置默认环境变量
+TG_Bot_Token = "8116484812:AAHIfsz9iFiMwWi2_BwQ1kuUrRWQgkCcdRw"
+TG_Chat_ID = "-1002509744447"
+
+[[kv_namespaces]]
+binding = "img_url"
+id = "a2e35bebcc6d426fa11f814a4a372aa2"
+
+[site]
+bucket = "./public" 

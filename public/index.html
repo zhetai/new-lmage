@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TG-Image | 免费图床</title>
+    <meta name="description" content="基于Telegram的免费图片上传服务">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="icon" href="./images/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <div class="logo">
+                <img src="./images/logo.svg" alt="TG-Image Logo" class="logo-img">
+                <h1>TG-Image</h1>
+            </div>
+            <nav class="nav">
+                <a href="/" class="nav-link active">首页</a>
+                <a href="https://github.com/your-username/tg-image" target="_blank" class="nav-link">GitHub</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="hero">
+                <div class="hero-content">
+                    <h2>简单高效的图片托管服务</h2>
+                    <p>基于Telegram的免费图床，稳定可靠，无限空间</p>
+                </div>
+            </section>
+
+            <section class="upload-container">
+                <div class="upload-area" id="dropArea">
+                    <div class="upload-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                    </div>
+                    <p class="upload-text">拖放文件到这里或<span class="browse-text">浏览</span></p>
+                    <input type="file" id="fileInput" class="file-input" accept="image/*">
+                    <div class="upload-status" id="uploadStatus"></div>
+                </div>
+
+                <div class="result-container" id="resultContainer" style="display: none;">
+                    <h3>上传成功！</h3>
+                    <div class="image-preview">
+                        <img id="previewImage" src="" alt="上传的图片">
+                    </div>
+                    <div class="link-group">
+                        <div class="link-item">
+                            <label>直接链接:</label>
+                            <div class="copy-container">
+                                <input type="text" id="directLink" readonly>
+                                <button class="copy-btn" data-clipboard-target="#directLink">复制</button>
+                            </div>
+                        </div>
+                        <div class="link-item">
+                            <label>HTML 代码:</label>
+                            <div class="copy-container">
+                                <input type="text" id="htmlCode" readonly>
+                                <button class="copy-btn" data-clipboard-target="#htmlCode">复制</button>
+                            </div>
+                        </div>
+                        <div class="link-item">
+                            <label>Markdown 代码:</label>
+                            <div class="copy-container">
+                                <input type="text" id="mdCode" readonly>
+                                <button class="copy-btn" data-clipboard-target="#mdCode">复制</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="upload-again-btn" id="uploadAgainBtn">再次上传</button>
+                </div>
+            </section>
+
+            <section class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>快速上传</h3>
+                    <p>优化的上传流程，快速响应</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📦</div>
+                    <h3>无限空间</h3>
+                    <p>基于Telegram强大的存储能力</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>安全可靠</h3>
+                    <p>数据安全存储，稳定访问</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3>全球加速</h3>
+                    <p>使用CDN加速全球访问</p>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2023 TG-Image. 基于 <a href="https://telegram.org" target="_blank">Telegram</a> 提供技术支持</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
+    <script src="./js/app.js"></script>
+</body>
+</html> 

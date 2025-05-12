@@ -1,0 +1,23 @@
+{
+  "name": "tg-image",
+  "version": "1.0.0",
+  "description": "基于Telegram的图床服务",
+  "main": "index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler publish"
+  },
+  "keywords": [
+    "图床",
+    "telegram",
+    "cloudflare"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "hono": "^3.1.0"
+  },
+  "devDependencies": {
+    "wrangler": "^2.0.0"
+  }
+} 
