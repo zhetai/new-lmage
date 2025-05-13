@@ -7,10 +7,12 @@ main = "src/index.js"
 # 可以在这里设置默认环境变量
 TG_Bot_Token = "8116484812:AAHIfsz9iFiMwWi2_BwQ1kuUrRWQgkCcdRw"
 TG_Chat_ID = "-1002509744447"
+# API密钥，用于直接上传API的认证
+API_KEY = "your-secure-api-key-here"
 
 [[kv_namespaces]]
 binding = "img_url"
 id = "a2e35bebcc6d426fa11f814a4a372aa2"
 
 [site]
-bucket = "./public" 
+bucket = "./public"
