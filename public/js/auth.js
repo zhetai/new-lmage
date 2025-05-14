@@ -236,18 +236,28 @@ function initRegisterForm() {
 // 退出登录
 function initLogout() {
     const logoutBtn = document.getElementById('logoutBtn');
+    const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
 
+    // 退出登录函数
+    const logout = (e) => {
+        e.preventDefault();
+
+        // 清除本地存储
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+
+        // 重定向到首页
+        smoothPageTransition('/');
+    };
+
+    // 桌面端退出按钮
     if (logoutBtn) {
-        logoutBtn.addEventListener('click', (e) => {
-            e.preventDefault();
+        logoutBtn.addEventListener('click', logout);
+    }
 
-            // 清除本地存储
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-
-            // 重定向到首页
-            smoothPageTransition('/');
-        });
+    // 移动端退出按钮
+    if (mobileLogoutBtn) {
+        mobileLogoutBtn.addEventListener('click', logout);
     }
 }
 
