@@ -120,7 +120,7 @@ function initScrollAnimations() {
 
 // 平滑滚动初始化
 function initSmoothScroll() {
-    // 为所有内部链接添加平滑滚动
+    // 为所有内部锚点链接添加平滑滚动
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
@@ -134,6 +134,18 @@ function initSmoothScroll() {
                     behavior: 'smooth',
                     block: 'start'
                 });
+            }
+        });
+    });
+
+    // 为所有内部页面链接添加平滑跳转
+    document.querySelectorAll('a:not([href^="#"]):not([href^="http"])').forEach(link => {
+        link.addEventListener('click', function(e) {
+            // 排除外部链接和特殊链接
+            const href = this.getAttribute('href');
+            if (href && !href.startsWith('http') && !href.startsWith('mailto:') && !href.startsWith('tel:')) {
+                e.preventDefault();
+                smoothPageTransition(href);
             }
         });
     });
@@ -305,7 +317,7 @@ function initUpload() {
                 showError('请确保所有上传的文件都是图片！');
                 return;
             }
-            
+
             // 文件大小检查 (限制为10MB)
             if (files[i].size > 10 * 1024 * 1024) {
                 showError('每个图片大小不能超过10MB！');
@@ -389,7 +401,7 @@ function initUpload() {
         // 如果只有一个图片，仍然使用旧的预览方式
         if (results.length === 1) {
             const fileUrl = baseUrl + results[0].src;
-            
+
             // 设置图片预览
             previewImage.src = fileUrl;
             previewImage.alt = files[0].name;
@@ -407,7 +419,7 @@ function initUpload() {
                 // 创建缩略图项
                 const imageItem = document.createElement('div');
                 imageItem.className = 'image-item';
-                
+
                 // 创建图片元素
                 const img = document.createElement('img');
                 img.src = fileUrl;
@@ -420,7 +432,7 @@ function initUpload() {
                     htmlCode.value = `<img src="${fileUrl}" alt="${fileName}" />`;
                     mdCode.value = `![${fileName}](${fileUrl})`;
                 });
-                
+
                 // 添加到容器
                 imageItem.appendChild(img);
                 imageListContainer.appendChild(imageItem);
@@ -430,11 +442,11 @@ function initUpload() {
             if (results.length > 0) {
                 const firstFileUrl = baseUrl + results[0].src;
                 const firstName = files[0] ? files[0].name : '图片1';
-                
+
                 // 设置默认预览
                 previewImage.src = firstFileUrl;
                 previewImage.alt = firstName;
-                
+
                 // 设置默认代码
                 directLink.value = firstFileUrl;
                 htmlCode.value = `<img src="${firstFileUrl}" alt="${firstName}" />`;
@@ -779,6 +791,46 @@ function initBackToTop() {
 
     // 滚动时检查
     window.addEventListener('scroll', toggleBackToTopButton);
+}
+
+// 平滑页面跳转函数
+function smoothPageTransition(url) {
+    // 获取页面加载动画元素
+    const pageLoader = document.getElementById('pageLoader');
+    const progressBar = document.getElementById('loaderProgressBar');
+    const pageTransition = document.getElementById('pageTransition');
+
+    if (pageLoader && progressBar) {
+        // 先显示页面过渡动画
+        if (pageTransition) {
+            pageTransition.classList.add('active');
+        }
+
+        // 重置进度条
+        progressBar.style.width = '0%';
+
+        // 显示加载动画
+        pageLoader.classList.remove('loaded');
+
+        // 模拟加载进度
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.random() * 15;
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(interval);
+
+                // 完成加载后延迟一小段时间再跳转
+                setTimeout(() => {
+                    window.location.href = url;
+                }, 100);
+            }
+            progressBar.style.width = `${progress}%`;
+        }, 30);
+    } else {
+        // 如果找不到加载动画元素，直接跳转
+        window.location.href = url;
+    }
 }
 
 // 移动端菜单初始化
