@@ -857,38 +857,64 @@ function initMobileMenu() {
         console.log('点击菜单按钮');
         e.preventDefault();
         e.stopPropagation();
+
+        // 确保菜单按钮在最上层
+        mobileMenuBtn.style.zIndex = '1002';
+
+        // 显示菜单
         mobileMenu.classList.add('active');
         mobileMenuOverlay.classList.add('active');
         document.body.style.overflow = 'hidden'; // 防止背景滚动
     });
 
     // 关闭菜单的函数
-    const closeMenu = () => {
+    const closeMenu = (e) => {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
         mobileMenu.classList.remove('active');
         mobileMenuOverlay.classList.remove('active');
         document.body.style.overflow = ''; // 恢复滚动
+
+        // 延迟一下再重置z-index，避免闪烁
+        setTimeout(() => {
+            mobileMenuBtn.style.zIndex = '1002';
+        }, 300);
     };
 
     // 关闭按钮点击事件
     if (mobileMenuCloseBtn) {
         mobileMenuCloseBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            closeMenu();
+            console.log('点击关闭按钮');
+            closeMenu(e);
         });
     }
 
     // 遮罩点击关闭
     if (mobileMenuOverlay) {
-        mobileMenuOverlay.addEventListener('click', closeMenu);
+        mobileMenuOverlay.addEventListener('click', (e) => {
+            console.log('点击遮罩层');
+            closeMenu(e);
+        });
     }
 
     // 移动端菜单链接点击后关闭菜单
     const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
     mobileNavLinks.forEach(link => {
-        link.addEventListener('click', () => {
+        link.addEventListener('click', (e) => {
+            console.log('点击菜单链接:', link.textContent);
+
             // 如果是内部链接，关闭菜单
             if (!link.getAttribute('href').startsWith('http')) {
+                // 延迟一下再跳转，确保菜单关闭动画完成
+                e.preventDefault();
                 closeMenu();
+
+                setTimeout(() => {
+                    window.location.href = link.getAttribute('href');
+                }, 300);
             }
         });
     });

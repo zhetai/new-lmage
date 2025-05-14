@@ -1566,7 +1566,8 @@ body.dark-mode .footer {
     padding: 0;
     align-items: center;
     justify-content: center;
-    z-index: 101; /* 确保按钮在最上层 */
+    z-index: 1002; /* 确保按钮在最上层，比菜单更高 */
+    position: relative; /* 确保z-index生效 */
 }
 
 .mobile-menu-btn:hover {
@@ -1606,7 +1607,7 @@ body.dark-mode .mobile-menu-btn:hover {
     height: 100vh;
     background-color: var(--card-bg);
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
+    z-index: 1001; /* 确保菜单在最上层 */
     transition: right var(--transition);
     display: flex;
     flex-direction: column;
@@ -1630,24 +1631,32 @@ body.dark-mode .mobile-menu {
     align-items: center;
     padding: var(--spacing);
     border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    background-color: var(--card-bg);
+    z-index: 1002;
 }
 
 body.dark-mode .mobile-menu-header {
     border-bottom-color: var(--dark-border);
+    background-color: var(--dark-card-bg);
 }
 
 .mobile-menu-close {
     background: none;
     border: none;
     cursor: pointer;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     color: var(--text-light);
     transition: all var(--transition-fast);
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 1003; /* 确保关闭按钮在最上层 */
+    position: relative; /* 确保z-index生效 */
+    background-color: rgba(0, 0, 0, 0.05); /* 增加背景色提高可见性 */
 }
 
 .mobile-menu-close:hover {
@@ -1655,8 +1664,12 @@ body.dark-mode .mobile-menu-header {
     color: var(--secondary-color);
 }
 
-body.dark-mode .mobile-menu-close:hover {
+body.dark-mode .mobile-menu-close {
     background-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .mobile-menu-close:hover {
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 .mobile-nav {
@@ -1697,15 +1710,17 @@ body.dark-mode .mobile-nav-link {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 999;
+    z-index: 99; /* 降低z-index，确保它不会覆盖菜单按钮 */
     opacity: 0;
     visibility: hidden;
     transition: opacity var(--transition), visibility var(--transition);
+    pointer-events: none; /* 默认不接收点击事件 */
 }
 
 .mobile-menu-overlay.active {
     opacity: 1;
     visibility: visible;
+    pointer-events: auto; /* 激活时接收点击事件 */
 }
 
 /* 页面加载动画 */
