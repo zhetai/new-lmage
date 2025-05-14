@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy"
+    "deploy": "wrangler deploy",
+    "create-kv": "node create-kv.js",
+    "setup": "npm run create-kv && npm run deploy"
   },
   "keywords": [
     "图床",
@@ -18,6 +20,6 @@
     "hono": "^3.1.0"
   },
   "devDependencies": {
-    "wrangler": "^3.22.0"
+    "wrangler": "^4.14.4"
   }
 }
