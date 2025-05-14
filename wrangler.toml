@@ -12,5 +12,12 @@ TG_Chat_ID = "-1002509744447"
 binding = "img_url"
 id = "a2e35bebcc6d426fa11f814a4a372aa2"
 
+[[kv_namespaces]]
+binding = "users"
+id = "a2e35bebcc6d426fa11f814a4a372aa3"
+
+[vars]
+JWT_SECRET = "your-jwt-secret-key-change-this-in-production"
+
 [site]
-bucket = "./public" 
+bucket = "./public"

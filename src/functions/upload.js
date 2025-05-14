@@ -1,7 +1,25 @@
 import { errorHandling, telemetryData } from "./utils/middleware";
+import { authMiddleware } from "./utils/auth";
+
+// 添加认证中间件包装
+export const authenticatedUpload = async (c) => {
+    // 检查是否有认证头
+    const authHeader = c.req.header('Authorization');
+
+    // 如果有认证头，验证用户
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+        return authMiddleware(c, () => upload(c));
+    }
+
+    // 如果没有认证头，允许匿名上传
+    return upload(c);
+};
 
 export async function upload(c) {
     const env = c.env;
+    // 获取用户信息（如果已认证）
+    const user = c.get('user');
+    const userId = user ? user.id : null;
 
     try {
         const formData = await c.req.formData();
@@ -51,20 +69,45 @@ export async function upload(c) {
         }
 
         // 将文件信息保存到 KV 存储
+        const fileKey = `${fileId}.${fileExtension}`;
+        const timestamp = Date.now();
+
         if (env.img_url) {
-            await env.img_url.put(`${fileId}.${fileExtension}`, "", {
-                metadata: {
-                    TimeStamp: Date.now(),
-                    ListType: "None",
-                    Label: "None",
-                    liked: false,
+            // 创建文件元数据
+            const metadata = {
+                TimeStamp: timestamp,
+                ListType: "None",
+                Label: "None",
+                liked: false,
+                fileName: fileName,
+                fileSize: uploadFile.size,
+                userId: userId || "anonymous" // 添加用户ID
+            };
+
+            // 保存文件元数据
+            await env.img_url.put(fileKey, "", { metadata });
+
+            // 如果是已登录用户，将文件添加到用户的文件列表中
+            if (userId) {
+                // 获取用户的文件列表
+                const userFilesKey = `user:${userId}:files`;
+                let userFiles = await env.img_url.get(userFilesKey, { type: "json" }) || [];
+
+                // 添加新文件
+                userFiles.push({
+                    id: fileKey,
                     fileName: fileName,
                     fileSize: uploadFile.size,
-                }
-            });
+                    uploadTime: timestamp,
+                    url: `/file/${fileKey}`
+                });
+
+                // 保存更新后的文件列表
+                await env.img_url.put(userFilesKey, JSON.stringify(userFiles));
+            }
         }
 
-        return c.json([{ 'src': `/file/${fileId}.${fileExtension}` }]);
+        return c.json([{ 'src': `/file/${fileKey}` }]);
     } catch (error) {
         console.error('上传错误:', error);
         return c.json({ error: error.message }, 500);
