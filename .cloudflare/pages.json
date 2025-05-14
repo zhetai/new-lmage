@@ -1,6 +1,6 @@
 {
   "build": {
-    "command": "npm run deploy",
+    "command": "npm run setup",
     "output_directory": "public"
   }
 }

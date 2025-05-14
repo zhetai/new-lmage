@@ -62,21 +62,18 @@ TG_Chat_ID = "YOUR_CHAT_ID"
 npm run setup
 ```
 
-或者手动创建 KV 命名空间:
+这个命令会自动执行以下操作：
+- 检查并创建必要的 KV 命名空间（如果不存在）
+- 自动更新 `wrangler.toml` 文件中的 KV 命名空间 ID
+- 部署项目到 Cloudflare Workers
+
+你也可以分步执行：
 
 ```bash
-# 创建图片 KV 命名空间
-npx wrangler kv:namespace create "img_url"
+# 创建 KV 命名空间并更新 wrangler.toml
+npm run create-kv
 
-# 创建用户 KV 命名空间
-npx wrangler kv:namespace create "users"
-```
-
-然后将生成的 ID 复制到 `wrangler.toml` 文件中。
-
-5. 部署到 Cloudflare Workers:
-
-```bash
+# 部署
 npm run deploy
 ```
 

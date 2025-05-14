@@ -9,8 +9,10 @@
 3. 选择你的项目
 4. 点击 "Settings" 标签
 5. 在 "Build & deployments" 部分中，找到 "Build command" 设置
-6. 将 "Build command" 更改为：`npm run deploy`
+6. 将 "Build command" 更改为：`npm run setup`
 7. 点击 "Save" 保存更改
+
+这个命令会自动创建必要的 KV 命名空间（如果不存在），并更新 `wrangler.toml` 文件中的 KV 命名空间 ID，然后部署项目。
 
 ## 环境变量
 
