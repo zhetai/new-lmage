@@ -27,6 +27,20 @@ window.addEventListener('load', () => {
     }, 100);
 });
 
+// 获取认证头
+function getAuthHeader() {
+    const token = localStorage.getItem('token');
+    const isLoggedIn = !!token;
+    console.log('认证状态:', isLoggedIn ? '已登录' : '未登录');
+    if (isLoggedIn) {
+        console.log('添加认证头');
+        return { 'Authorization': `Bearer ${token}` };
+    } else {
+        console.log('无认证头');
+        return {};
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     // 初始化页面加载动画
     initPageLoader();
@@ -305,9 +319,14 @@ function initUpload() {
         const formData = new FormData();
         formData.append('file', file);
 
+        // 获取认证头
+        const headers = getAuthHeader();
+        console.log('上传请求 - 认证头:', headers);
+
         // 发送请求
         fetch('/upload', {
             method: 'POST',
+            headers: headers, // 添加认证头
             body: formData
         })
         .then(response => {

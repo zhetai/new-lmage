@@ -21,6 +21,10 @@ export async function upload(c) {
     const user = c.get('user');
     const userId = user ? user.id : null;
 
+    // 添加调试日志
+    console.log('上传请求 - 用户信息:', user ? JSON.stringify(user) : '未登录');
+    console.log('上传请求 - 用户ID:', userId);
+
     try {
         const formData = await c.req.formData();
 
@@ -93,17 +97,25 @@ export async function upload(c) {
                 const userFilesKey = `user:${userId}:files`;
                 let userFiles = await env.img_url.get(userFilesKey, { type: "json" }) || [];
 
+                console.log('用户文件列表获取:', userFilesKey, userFiles.length ? `已有${userFiles.length}个文件` : '列表为空');
+
                 // 添加新文件
-                userFiles.push({
+                const newFile = {
                     id: fileKey,
                     fileName: fileName,
                     fileSize: uploadFile.size,
                     uploadTime: timestamp,
                     url: `/file/${fileKey}`
-                });
+                };
+
+                userFiles.push(newFile);
+                console.log('添加新文件到用户列表:', newFile);
 
                 // 保存更新后的文件列表
                 await env.img_url.put(userFilesKey, JSON.stringify(userFiles));
+                console.log('用户文件列表已更新, 现有文件数:', userFiles.length);
+            } else {
+                console.log('匿名上传，不关联用户');
             }
         }
 
