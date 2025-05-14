@@ -19,14 +19,14 @@
             margin: 2rem auto;
             padding: 1rem;
         }
-        
+
         .dashboard-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 2rem;
         }
-        
+
         .dashboard-title {
             font-size: 1.8rem;
             background: var(--primary-gradient);
@@ -34,18 +34,18 @@
             background-clip: text;
             color: transparent;
         }
-        
+
         .dashboard-actions {
             display: flex;
             gap: 1rem;
         }
-        
+
         .search-bar {
             display: flex;
             margin-bottom: 1.5rem;
             max-width: 600px;
         }
-        
+
         .search-input {
             flex: 1;
             padding: 0.75rem 1rem;
@@ -57,18 +57,18 @@
             background-color: var(--bg-color);
             color: var(--text-color);
         }
-        
+
         body.dark-mode .search-input {
             background-color: var(--dark-bg);
             border-color: var(--dark-border);
             color: var(--dark-text);
         }
-        
+
         .search-input:focus {
             outline: none;
             border-color: var(--primary-light);
         }
-        
+
         .search-btn {
             padding: 0.75rem 1.5rem;
             background: var(--primary-gradient);
@@ -79,17 +79,17 @@
             cursor: pointer;
             transition: all var(--transition-fast);
         }
-        
+
         .search-btn:hover {
             opacity: 0.9;
         }
-        
+
         .image-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 1.5rem;
         }
-        
+
         .image-card {
             background-color: var(--card-bg);
             border-radius: var(--radius);
@@ -98,38 +98,38 @@
             transition: all var(--transition);
             position: relative;
         }
-        
+
         body.dark-mode .image-card {
             background-color: var(--dark-card-bg);
         }
-        
+
         .image-card:hover {
             transform: translateY(-5px);
             box-shadow: var(--shadow-lg);
         }
-        
+
         .image-preview {
             width: 100%;
             height: 180px;
             overflow: hidden;
             position: relative;
         }
-        
+
         .image-preview img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform var(--transition);
         }
-        
+
         .image-card:hover .image-preview img {
             transform: scale(1.05);
         }
-        
+
         .image-info {
             padding: 1rem;
         }
-        
+
         .image-name {
             font-weight: 500;
             margin-bottom: 0.5rem;
@@ -137,24 +137,24 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        
+
         .image-meta {
             display: flex;
             justify-content: space-between;
             font-size: 0.85rem;
             color: var(--text-light);
         }
-        
+
         body.dark-mode .image-meta {
             color: var(--dark-text-light);
         }
-        
+
         .image-actions {
             display: flex;
             padding: 0.5rem 1rem 1rem;
             gap: 0.5rem;
         }
-        
+
         .image-btn {
             flex: 1;
             padding: 0.5rem;
@@ -168,33 +168,33 @@
             justify-content: center;
             gap: 0.25rem;
         }
-        
+
         .copy-btn {
             background-color: var(--primary-light);
             color: white;
         }
-        
+
         .edit-btn {
             background-color: #4cc9f0;
             color: white;
         }
-        
+
         .delete-btn {
             background-color: #f72585;
             color: white;
         }
-        
+
         .image-btn:hover {
             opacity: 0.9;
         }
-        
+
         .pagination {
             display: flex;
             justify-content: center;
             margin-top: 2rem;
             gap: 0.5rem;
         }
-        
+
         .page-btn {
             padding: 0.5rem 1rem;
             border: 1px solid var(--border-color);
@@ -203,23 +203,23 @@
             cursor: pointer;
             transition: all var(--transition-fast);
         }
-        
+
         body.dark-mode .page-btn {
             background-color: var(--dark-card-bg);
             border-color: var(--dark-border);
             color: var(--dark-text);
         }
-        
+
         .page-btn.active {
             background: var(--primary-gradient);
             color: white;
             border-color: transparent;
         }
-        
+
         .page-btn:hover:not(.active) {
             border-color: var(--primary-light);
         }
-        
+
         .empty-state {
             text-align: center;
             padding: 3rem;
@@ -227,25 +227,25 @@
             border-radius: var(--radius);
             box-shadow: var(--shadow);
         }
-        
+
         body.dark-mode .empty-state {
             background-color: var(--dark-card-bg);
         }
-        
+
         .empty-state h3 {
             margin-bottom: 1rem;
             font-size: 1.5rem;
         }
-        
+
         .empty-state p {
             margin-bottom: 1.5rem;
             color: var(--text-light);
         }
-        
+
         body.dark-mode .empty-state p {
             color: var(--dark-text-light);
         }
-        
+
         .upload-btn {
             display: inline-block;
             padding: 0.75rem 1.5rem;
@@ -259,12 +259,12 @@
             transition: all var(--transition-fast);
             text-decoration: none;
         }
-        
+
         .upload-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(var(--primary-dark-rgb), 0.3);
         }
-        
+
         /* 编辑模态框 */
         .modal {
             display: none;
@@ -278,7 +278,7 @@
             align-items: center;
             justify-content: center;
         }
-        
+
         .modal-content {
             background-color: var(--card-bg);
             border-radius: var(--radius);
@@ -287,23 +287,23 @@
             max-width: 500px;
             box-shadow: var(--shadow-lg);
         }
-        
+
         body.dark-mode .modal-content {
             background-color: var(--dark-card-bg);
         }
-        
+
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
         }
-        
+
         .modal-title {
             font-size: 1.5rem;
             font-weight: 600;
         }
-        
+
         .modal-close {
             background: none;
             border: none;
@@ -311,21 +311,21 @@
             cursor: pointer;
             color: var(--text-light);
         }
-        
+
         body.dark-mode .modal-close {
             color: var(--dark-text-light);
         }
-        
+
         .modal-body {
             margin-bottom: 1.5rem;
         }
-        
+
         .modal-footer {
             display: flex;
             justify-content: flex-end;
             gap: 1rem;
         }
-        
+
         .modal-btn {
             padding: 0.75rem 1.5rem;
             border-radius: var(--radius-sm);
@@ -333,23 +333,23 @@
             cursor: pointer;
             transition: all var(--transition-fast);
         }
-        
+
         .modal-btn-primary {
             background: var(--primary-gradient);
             color: white;
             border: none;
         }
-        
+
         .modal-btn-secondary {
             background: none;
             border: 1px solid var(--border-color);
         }
-        
+
         body.dark-mode .modal-btn-secondary {
             border-color: var(--dark-border);
             color: var(--dark-text);
         }
-        
+
         .tags-input {
             display: flex;
             flex-wrap: wrap;
@@ -360,12 +360,12 @@
             min-height: 2.5rem;
             background-color: var(--bg-color);
         }
-        
+
         body.dark-mode .tags-input {
             background-color: var(--dark-bg);
             border-color: var(--dark-border);
         }
-        
+
         .tag {
             display: flex;
             align-items: center;
@@ -375,12 +375,12 @@
             border-radius: var(--radius-sm);
             font-size: 0.9rem;
         }
-        
+
         .tag-remove {
             margin-left: 0.25rem;
             cursor: pointer;
         }
-        
+
         .tags-input input {
             flex: 1;
             border: none;
@@ -390,35 +390,35 @@
             background: transparent;
             color: var(--text-color);
         }
-        
+
         body.dark-mode .tags-input input {
             color: var(--dark-text);
         }
-        
+
         @media (max-width: 768px) {
             .dashboard-header {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 1rem;
             }
-            
+
             .dashboard-actions {
                 width: 100%;
             }
-            
+
             .search-bar {
                 width: 100%;
             }
-            
+
             .image-grid {
                 grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
                 gap: 1rem;
             }
-            
+
             .image-preview {
                 height: 120px;
             }
-            
+
             .image-actions {
                 flex-direction: column;
             }
@@ -429,14 +429,15 @@
     <!-- 页面加载动画 -->
     <div id="pageLoader" class="page-loader">
         <div class="loader-content">
-            <div class="loader-logo">
-                <img src="./images/logo.svg" alt="TG-Image Logo">
-            </div>
+            <img src="./images/logo.svg" alt="TG-Image Logo" class="loader-logo">
             <div class="loader-progress">
                 <div id="loaderProgressBar" class="loader-progress-bar"></div>
             </div>
         </div>
     </div>
+
+    <!-- 页面过渡动画 -->
+    <div id="pageTransition" class="page-transition"></div>
 
     <div class="app-container">
         <header class="header">
@@ -496,22 +497,22 @@
                         <a href="/" class="upload-btn">上传新图片</a>
                     </div>
                 </div>
-                
+
                 <div class="search-bar">
                     <input type="text" id="searchInput" class="search-input" placeholder="搜索图片...">
                     <button id="searchBtn" class="search-btn">搜索</button>
                 </div>
-                
+
                 <div id="imageGrid" class="image-grid">
                     <!-- 图片卡片将通过JavaScript动态生成 -->
                 </div>
-                
+
                 <div id="emptyState" class="empty-state" style="display: none;">
                     <h3>还没有上传图片</h3>
                     <p>上传您的第一张图片，开始使用TG-Image图床服务</p>
                     <a href="/" class="upload-btn">上传图片</a>
                 </div>
-                
+
                 <div id="pagination" class="pagination">
                     <!-- 分页按钮将通过JavaScript动态生成 -->
                 </div>
