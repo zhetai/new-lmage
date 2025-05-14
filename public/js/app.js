@@ -840,10 +840,23 @@ function initMobileMenu() {
     const mobileMenu = document.getElementById('mobileMenu');
     const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
 
-    if (!mobileMenuBtn || !mobileMenu) return;
+    if (!mobileMenuBtn || !mobileMenu) {
+        console.error('移动端菜单元素未找到');
+        return;
+    }
+
+    console.log('初始化移动端菜单');
+
+    // 确保移动菜单按钮可见（在移动设备上）
+    if (window.innerWidth <= 768) {
+        mobileMenuBtn.style.display = 'flex';
+    }
 
     // 打开菜单
-    mobileMenuBtn.addEventListener('click', () => {
+    mobileMenuBtn.addEventListener('click', (e) => {
+        console.log('点击菜单按钮');
+        e.preventDefault();
+        e.stopPropagation();
         mobileMenu.classList.add('active');
         mobileMenuOverlay.classList.add('active');
         document.body.style.overflow = 'hidden'; // 防止背景滚动
@@ -858,7 +871,10 @@ function initMobileMenu() {
 
     // 关闭按钮点击事件
     if (mobileMenuCloseBtn) {
-        mobileMenuCloseBtn.addEventListener('click', closeMenu);
+        mobileMenuCloseBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeMenu();
+        });
     }
 
     // 遮罩点击关闭
@@ -877,10 +893,15 @@ function initMobileMenu() {
         });
     });
 
-    // 监听窗口大小变化，在大屏幕上自动关闭移动菜单
+    // 监听窗口大小变化，在大屏幕上自动关闭移动菜单，在小屏幕上显示菜单按钮
     window.addEventListener('resize', () => {
-        if (window.innerWidth > 768 && mobileMenu.classList.contains('active')) {
-            closeMenu();
+        if (window.innerWidth > 768) {
+            if (mobileMenu.classList.contains('active')) {
+                closeMenu();
+            }
+            mobileMenuBtn.style.display = 'none';
+        } else {
+            mobileMenuBtn.style.display = 'flex';
         }
     });
 
@@ -900,4 +921,10 @@ function initMobileMenu() {
             closeMenu();
         }
     }, { passive: true });
+
+    // 初始检查
+    if (window.innerWidth <= 768) {
+        console.log('移动设备检测到，显示菜单按钮');
+        mobileMenuBtn.style.display = 'flex';
+    }
 }

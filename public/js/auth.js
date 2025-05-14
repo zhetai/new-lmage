@@ -49,6 +49,7 @@ function initAuth() {
     const userDropdown = document.getElementById('userDropdown');
     const userDisplayName = document.getElementById('userDisplayName');
     const navLinks = document.querySelectorAll('.nav-link');
+    const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
 
     if (isAuthenticated) {
         // 用户已登录
@@ -64,13 +65,32 @@ function initAuth() {
             userDropdown.style.display = 'block';
         }
 
-        // 更新导航链接
+        // 更新桌面端导航链接
         navLinks.forEach(link => {
             if (link.textContent === '登录') {
                 link.textContent = '我的图片';
                 link.href = '/dashboard.html';
             }
         });
+
+        // 更新移动端导航链接
+        mobileNavLinks.forEach(link => {
+            if (link.textContent === '登录') {
+                link.textContent = '我的图片';
+                link.href = '/dashboard.html';
+            }
+        });
+
+        // 添加移动端退出登录链接（如果不存在）
+        const mobileNav = document.querySelector('.mobile-nav');
+        if (mobileNav && !document.getElementById('mobileLogoutBtn')) {
+            const logoutLink = document.createElement('a');
+            logoutLink.href = '/';
+            logoutLink.id = 'mobileLogoutBtn';
+            logoutLink.className = 'mobile-nav-link';
+            logoutLink.textContent = '退出登录';
+            mobileNav.appendChild(logoutLink);
+        }
 
         // 如果当前页面是登录或注册页面，重定向到首页
         if (path === '/login.html' || path === '/register.html') {
@@ -93,13 +113,27 @@ function initAuth() {
             userDropdown.style.display = 'none';
         }
 
-        // 更新导航链接
+        // 更新桌面端导航链接
         navLinks.forEach(link => {
             if (link.textContent === '我的图片') {
                 link.textContent = '登录';
                 link.href = '/login.html';
             }
         });
+
+        // 更新移动端导航链接
+        mobileNavLinks.forEach(link => {
+            if (link.textContent === '我的图片') {
+                link.textContent = '登录';
+                link.href = '/login.html';
+            }
+        });
+
+        // 移除移动端退出登录链接（如果存在）
+        const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+        if (mobileLogoutBtn) {
+            mobileLogoutBtn.parentNode.removeChild(mobileLogoutBtn);
+        }
 
         // 如果当前页面是仪表盘，重定向到登录页面
         if (path === '/dashboard.html') {

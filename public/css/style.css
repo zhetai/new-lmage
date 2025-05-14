@@ -1082,9 +1082,8 @@ body.dark-mode .footer {
     }
 
     .mobile-menu-btn {
-        display: flex;
+        display: flex !important;
     }
-}
 
     .hero h2 {
         font-size: 2rem;
@@ -1146,6 +1145,7 @@ body.dark-mode .footer {
         bottom: 20px;
         right: 20px;
     }
+}
 
 @media (max-width: 700px) {
     .features {
@@ -1257,6 +1257,26 @@ body.dark-mode .footer {
         min-height: 44px; /* 确保触摸目标足够大 */
     }
 
+    /* 增强移动端菜单按钮的可见性 */
+    .mobile-menu-btn {
+        display: flex !important;
+        background-color: rgba(0, 0, 0, 0.1);
+        width: 46px;
+        height: 46px;
+        margin-left: 8px;
+        border-radius: 8px;
+    }
+
+    body.dark-mode .mobile-menu-btn {
+        background-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .mobile-menu-btn svg {
+        width: 28px;
+        height: 28px;
+        stroke-width: 2.5px;
+    }
+
     .upload-again-btn {
         width: 100%;
         margin-top: var(--spacing);
@@ -1329,10 +1349,27 @@ body.dark-mode .footer {
     /* 优化移动端菜单 */
     .mobile-menu {
         width: 85%;
+        visibility: visible !important;
     }
 
     .mobile-nav-link {
         padding: 14px var(--spacing);
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    /* 增强移动端菜单的可见性 */
+    .mobile-menu.active {
+        right: 0 !important;
+        box-shadow: -5px 0 25px rgba(0, 0, 0, 0.25);
+    }
+
+    body.dark-mode .mobile-menu.active {
+        box-shadow: -5px 0 25px rgba(0, 0, 0, 0.5);
+    }
+
+    .mobile-menu-overlay.active {
+        opacity: 0.7 !important;
     }
 
     @keyframes fadeOut {
@@ -1529,6 +1566,7 @@ body.dark-mode .footer {
     padding: 0;
     align-items: center;
     justify-content: center;
+    z-index: 101; /* 确保按钮在最上层 */
 }
 
 .mobile-menu-btn:hover {
@@ -1538,6 +1576,24 @@ body.dark-mode .footer {
 
 body.dark-mode .mobile-menu-btn:hover {
     background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 增强移动端菜单按钮在移动设备上的可见性 */
+@media (max-width: 768px) {
+    .mobile-menu-btn {
+        background-color: rgba(0, 0, 0, 0.05);
+        width: 44px;
+        height: 44px;
+    }
+
+    body.dark-mode .mobile-menu-btn {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .mobile-menu-btn svg {
+        width: 28px;
+        height: 28px;
+    }
 }
 
 /* 移动端菜单 */
@@ -1556,6 +1612,7 @@ body.dark-mode .mobile-menu-btn:hover {
     flex-direction: column;
     overflow-y: auto;
     padding-bottom: 50px; /* 确保底部有足够空间 */
+    visibility: visible; /* 确保菜单可见 */
 }
 
 body.dark-mode .mobile-menu {
