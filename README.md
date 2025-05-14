@@ -80,6 +80,10 @@ npx wrangler kv:namespace create "users"
 npm run deploy
 ```
 
+### Cloudflare Pages 部署
+
+如果你使用 Cloudflare Pages 部署此项目，请参阅 [Cloudflare Pages 部署配置](cloudflare-pages-config.md) 文件，了解如何配置 Cloudflare Pages 的部署设置。
+
 ## 使用方法
 
 ### 匿名上传
