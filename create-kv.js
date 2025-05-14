@@ -73,12 +73,24 @@ try {
 
       // 如果命名空间存在但 ID 不存在，尝试获取 ID
       if (!newImgUrlId) {
-        const kvInfo = kvListOutput.split('\n').find(line => line.includes('img_url'));
-        if (kvInfo) {
-          const idMatch = kvInfo.match(/id:\s*([a-f0-9]+)/);
-          if (idMatch) {
-            newImgUrlId = idMatch[1];
+        try {
+          // 尝试解析JSON格式的输出
+          const namespaces = JSON.parse(kvListOutput);
+          const imgUrlNamespace = namespaces.find(ns => ns.title === 'img_url');
+          if (imgUrlNamespace) {
+            newImgUrlId = imgUrlNamespace.id;
             console.log(`   找到 img_url KV 命名空间 ID: ${newImgUrlId}`);
+          }
+        } catch (error) {
+          console.error('   解析KV命名空间列表失败:', error);
+          // 尝试使用正则表达式匹配
+          const kvInfo = kvListOutput.split('\n').find(line => line.includes('img_url'));
+          if (kvInfo) {
+            const idMatch = kvInfo.match(/id:\s*([a-f0-9]+)/);
+            if (idMatch) {
+              newImgUrlId = idMatch[1];
+              console.log(`   找到 img_url KV 命名空间 ID: ${newImgUrlId}`);
+            }
           }
         }
       }
@@ -126,12 +138,24 @@ try {
 
       // 如果命名空间存在但 ID 不存在，尝试获取 ID
       if (!newUsersId) {
-        const kvInfo = kvListOutput.split('\n').find(line => line.includes('users'));
-        if (kvInfo) {
-          const idMatch = kvInfo.match(/id:\s*([a-f0-9]+)/);
-          if (idMatch) {
-            newUsersId = idMatch[1];
+        try {
+          // 尝试解析JSON格式的输出
+          const namespaces = JSON.parse(kvListOutput);
+          const usersNamespace = namespaces.find(ns => ns.title === 'users');
+          if (usersNamespace) {
+            newUsersId = usersNamespace.id;
             console.log(`   找到 users KV 命名空间 ID: ${newUsersId}`);
+          }
+        } catch (error) {
+          console.error('   解析KV命名空间列表失败:', error);
+          // 尝试使用正则表达式匹配
+          const kvInfo = kvListOutput.split('\n').find(line => line.includes('users'));
+          if (kvInfo) {
+            const idMatch = kvInfo.match(/id:\s*([a-f0-9]+)/);
+            if (idMatch) {
+              newUsersId = idMatch[1];
+              console.log(`   找到 users KV 命名空间 ID: ${newUsersId}`);
+            }
           }
         }
       }
