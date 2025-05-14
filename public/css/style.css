@@ -491,37 +491,22 @@ body.dark-mode .upload-area {
 }
 
 .upload-text {
-    color: var(--text-light);
-    margin-bottom: var(--spacing);
-    font-size: 1.1rem;
+    margin-top: 15px;
+    font-size: 18px;
+    color: var(--text-primary);
 }
 
-body.dark-mode .upload-text {
-    color: var(--dark-text-light);
+.upload-hint {
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    opacity: 0.8;
 }
 
 .browse-text {
     color: var(--primary-color);
-    font-weight: 600;
     cursor: pointer;
-    position: relative;
-    padding: 0 2px;
-}
-
-.browse-text::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: var(--primary-color);
-    transform: scaleX(0);
-    transition: transform var(--transition-fast);
-}
-
-.browse-text:hover::after {
-    transform: scaleX(1);
+    text-decoration: underline;
 }
 
 .file-input {
@@ -616,6 +601,51 @@ body.dark-mode .result-container {
     height: auto;
     display: block;
     transition: all var(--transition);
+}
+
+/* 批量上传图片列表样式 */
+.image-list-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+    margin: var(--spacing-md) 0;
+}
+
+.image-item {
+    border-radius: var(--radius);
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: all var(--transition-fast);
+    position: relative;
+}
+
+.image-item:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.image-item.active {
+    border: 2px solid var(--primary-color);
+}
+
+.image-item img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    display: block;
+}
+
+/* 图片列表响应式调整 */
+@media (max-width: 576px) {
+    .image-list-container {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: 8px;
+    }
+    
+    .image-item img {
+        height: 80px;
+    }
 }
 
 .link-group {
@@ -1116,7 +1146,6 @@ body.dark-mode .footer {
         bottom: 20px;
         right: 20px;
     }
-}
 
 @media (max-width: 700px) {
     .features {

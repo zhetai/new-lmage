@@ -286,38 +286,42 @@ function initUpload() {
         const files = e.dataTransfer.files;
         if (files.length) {
             fileInput.files = files;
-            handleFile(files[0]);
+            handleFiles(files);
         }
     });
 
     // 监听文件选择
     fileInput.addEventListener('change', () => {
         if (fileInput.files.length) {
-            handleFile(fileInput.files[0]);
+            handleFiles(fileInput.files);
         }
     });
 
-    // 处理文件上传
-    function handleFile(file) {
-        // 检查是否是图片
-        if (!file.type.match('image.*')) {
-            showError('请上传图片文件！');
-            return;
-        }
-
-        // 文件大小检查 (限制为10MB)
-        if (file.size > 10 * 1024 * 1024) {
-            showError('图片大小不能超过10MB！');
-            return;
+    // 处理多个文件上传
+    function handleFiles(files) {
+        // 检查所有文件是否都是图片
+        for (let i = 0; i < files.length; i++) {
+            if (!files[i].type.match('image.*')) {
+                showError('请确保所有上传的文件都是图片！');
+                return;
+            }
+            
+            // 文件大小检查 (限制为10MB)
+            if (files[i].size > 10 * 1024 * 1024) {
+                showError('每个图片大小不能超过10MB！');
+                return;
+            }
         }
 
         // 显示上传中状态
-        uploadStatus.innerHTML = '<span class="loading-text">上传中</span>';
+        uploadStatus.innerHTML = `<span class="loading-text">正在上传${files.length}张图片</span>`;
         uploadStatus.className = 'upload-status loading';
 
         // 准备表单数据
         const formData = new FormData();
-        formData.append('file', file);
+        for (let i = 0; i < files.length; i++) {
+            formData.append('file', files[i]);
+        }
 
         // 获取认证头
         const headers = getAuthHeader();
@@ -341,11 +345,11 @@ function initUpload() {
             }
 
             // 上传成功
-            uploadStatus.textContent = '上传成功！';
+            uploadStatus.textContent = `上传成功！共${data.length}张图片`;
             uploadStatus.className = 'upload-status success';
 
             // 显示结果
-            showResult(data[0].src, file);
+            showResults(data, files);
         })
         .catch(error => {
             showError(`上传失败: ${error.message}`);
@@ -364,20 +368,79 @@ function initUpload() {
         }, 500);
     }
 
-    // 显示上传结果
-    function showResult(filePath, file) {
-        // 构建完整URL
+    // 显示多个上传结果
+    function showResults(results, files) {
+        // 获取或创建图片列表容器
+        let imageListContainer = document.getElementById('imageListContainer');
+        if (!imageListContainer) {
+            // 创建图片列表容器
+            imageListContainer = document.createElement('div');
+            imageListContainer.id = 'imageListContainer';
+            imageListContainer.className = 'image-list-container';
+            resultContainer.insertBefore(imageListContainer, resultContainer.querySelector('.link-group'));
+        } else {
+            // 清空现有内容
+            imageListContainer.innerHTML = '';
+        }
+
+        // 构建基本URL
         const baseUrl = window.location.origin;
-        const fileUrl = baseUrl + filePath;
 
-        // 设置图片预览
-        previewImage.src = fileUrl;
-        previewImage.alt = file.name;
+        // 如果只有一个图片，仍然使用旧的预览方式
+        if (results.length === 1) {
+            const fileUrl = baseUrl + results[0].src;
+            
+            // 设置图片预览
+            previewImage.src = fileUrl;
+            previewImage.alt = files[0].name;
 
-        // 设置各种代码
-        directLink.value = fileUrl;
-        htmlCode.value = `<img src="${fileUrl}" alt="${file.name}" />`;
-        mdCode.value = `![${file.name}](${fileUrl})`;
+            // 设置各种代码
+            directLink.value = fileUrl;
+            htmlCode.value = `<img src="${fileUrl}" alt="${files[0].name}" />`;
+            mdCode.value = `![${files[0].name}](${fileUrl})`;
+        } else {
+            // 批量上传的情况，创建图片列表
+            for (let i = 0; i < results.length; i++) {
+                const fileUrl = baseUrl + results[i].src;
+                const fileName = files[i] ? files[i].name : `图片${i+1}`;
+
+                // 创建缩略图项
+                const imageItem = document.createElement('div');
+                imageItem.className = 'image-item';
+                
+                // 创建图片元素
+                const img = document.createElement('img');
+                img.src = fileUrl;
+                img.alt = fileName;
+                img.addEventListener('click', () => {
+                    // 点击单张图片时更新主预览和链接
+                    previewImage.src = fileUrl;
+                    previewImage.alt = fileName;
+                    directLink.value = fileUrl;
+                    htmlCode.value = `<img src="${fileUrl}" alt="${fileName}" />`;
+                    mdCode.value = `![${fileName}](${fileUrl})`;
+                });
+                
+                // 添加到容器
+                imageItem.appendChild(img);
+                imageListContainer.appendChild(imageItem);
+            }
+
+            // 默认选中第一张图片
+            if (results.length > 0) {
+                const firstFileUrl = baseUrl + results[0].src;
+                const firstName = files[0] ? files[0].name : '图片1';
+                
+                // 设置默认预览
+                previewImage.src = firstFileUrl;
+                previewImage.alt = firstName;
+                
+                // 设置默认代码
+                directLink.value = firstFileUrl;
+                htmlCode.value = `<img src="${firstFileUrl}" alt="${firstName}" />`;
+                mdCode.value = `![${firstName}](${firstFileUrl})`;
+            }
+        }
 
         // 隐藏上传区域，显示结果
         dropArea.style.display = 'none';
