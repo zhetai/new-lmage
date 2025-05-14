@@ -29,6 +29,19 @@
 - `img_url`: 用于存储图片 URL
 - `users`: 用于存储用户信息
 
+你可以使用以下命令创建 KV 命名空间（Wrangler 4.x 版本）：
+
+```bash
+# 创建图片 KV 命名空间
+npx wrangler kv namespace create "img_url"
+
+# 创建用户 KV 命名空间
+npx wrangler kv namespace create "users"
+```
+
+> **注意**：在 Wrangler 4.x 版本中，KV 命名空间的命令格式已经改变。
+> 正确的命令格式是：`npx wrangler kv namespace create "img_url"`（注意 `kv` 和 `namespace` 之间没有冒号）
+
 ## 部署
 
 更新配置后，重新部署项目：
@@ -38,11 +51,37 @@
 3. 选择要部署的分支
 4. 点击 "Deploy" 按钮
 
+## Wrangler 登录
+
+在部署前，确保你已经登录到 Cloudflare 账号：
+
+```bash
+npx wrangler login
+```
+
+这个命令会打开浏览器，引导你完成 Cloudflare 账号的登录过程。
+
 ## 故障排除
 
 如果部署失败，请检查以下内容：
 
-1. 确保 `wrangler.toml` 文件中的 KV 命名空间 ID 是正确的
-2. 确保 `package.json` 中的部署命令是 `wrangler deploy`
-3. 确保 Cloudflare Pages 的部署命令是 `npm run deploy`
-4. 检查部署日志，查看具体错误信息
+1. 确保你已经登录到 Cloudflare 账号（`npx wrangler login`）
+2. 确保 `wrangler.toml` 文件中的 KV 命名空间 ID 是正确的
+3. 确保 `package.json` 中的部署命令是 `wrangler deploy`
+4. 确保 Cloudflare Pages 的部署命令是 `npm run setup`
+5. 检查部署日志，查看具体错误信息
+
+### KV 命名空间错误
+
+如果遇到 `KV namespace 'xxx' not found` 错误，请确保你已经创建了 KV 命名空间，并且 ID 是正确的：
+
+```bash
+# 列出所有 KV 命名空间
+npx wrangler kv namespace list
+
+# 创建 KV 命名空间
+npx wrangler kv namespace create "img_url"
+npx wrangler kv namespace create "users"
+```
+
+然后将生成的 ID 更新到 `wrangler.toml` 文件中。

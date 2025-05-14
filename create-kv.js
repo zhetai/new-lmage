@@ -6,6 +6,31 @@ const path = require('path');
 
 console.log('创建 Cloudflare KV 命名空间...');
 
+// 检查 Wrangler 是否已登录
+function checkWranglerLogin() {
+  try {
+    console.log('检查 Wrangler 登录状态...');
+    const whoamiOutput = execSync('npx wrangler whoami', { encoding: 'utf8' });
+    console.log('Wrangler 已登录:', whoamiOutput);
+    return true;
+  } catch (error) {
+    console.error('Wrangler 未登录，请先登录:', error.message);
+    console.log('请运行 `npx wrangler login` 登录 Cloudflare 账号');
+    return false;
+  }
+}
+
+// 确保 Wrangler 已登录
+if (!checkWranglerLogin()) {
+  console.log('尝试自动登录...');
+  try {
+    execSync('npx wrangler login', { stdio: 'inherit' });
+  } catch (error) {
+    console.error('自动登录失败，请手动登录后再运行此脚本');
+    process.exit(1);
+  }
+}
+
 // 读取 wrangler.toml 文件
 const wranglerTomlPath = path.join(process.cwd(), 'wrangler.toml');
 let wranglerToml = fs.readFileSync(wranglerTomlPath, 'utf8');
@@ -23,14 +48,19 @@ try {
   let newImgUrlId = imgUrlId;
 
   try {
+    console.log('   执行命令: npx wrangler kv namespace list');
     // 检查 KV 命名空间是否存在
-    const kvListOutput = execSync('npx wrangler kv:namespace list', { encoding: 'utf8' });
+    const kvListOutput = execSync('npx wrangler kv namespace list', { encoding: 'utf8' });
+    console.log('   KV 命名空间列表获取成功');
+    console.log('   输出:', kvListOutput);
     const imgUrlExists = kvListOutput.includes('img_url');
 
     if (!imgUrlExists) {
       console.log('   img_url 命名空间不存在，正在创建...');
-      const createOutput = execSync('npx wrangler kv:namespace create "img_url"', { encoding: 'utf8' });
+      console.log('   执行命令: npx wrangler kv namespace create "img_url"');
+      const createOutput = execSync('npx wrangler kv namespace create "img_url"', { encoding: 'utf8' });
       console.log('   创建成功！');
+      console.log('   输出:', createOutput);
 
       // 提取新创建的 KV 命名空间 ID
       const idMatch = createOutput.match(/id\s*=\s*"([^"]+)"/);
@@ -71,14 +101,19 @@ try {
   let newUsersId = usersId;
 
   try {
+    console.log('   执行命令: npx wrangler kv namespace list');
     // 检查 KV 命名空间是否存在
-    const kvListOutput = execSync('npx wrangler kv:namespace list', { encoding: 'utf8' });
+    const kvListOutput = execSync('npx wrangler kv namespace list', { encoding: 'utf8' });
+    console.log('   KV 命名空间列表获取成功');
+    console.log('   输出:', kvListOutput);
     const usersExists = kvListOutput.includes('users');
 
     if (!usersExists) {
       console.log('   users 命名空间不存在，正在创建...');
-      const createOutput = execSync('npx wrangler kv:namespace create "users"', { encoding: 'utf8' });
+      console.log('   执行命令: npx wrangler kv namespace create "users"');
+      const createOutput = execSync('npx wrangler kv namespace create "users"', { encoding: 'utf8' });
       console.log('   创建成功！');
+      console.log('   输出:', createOutput);
 
       // 提取新创建的 KV 命名空间 ID
       const idMatch = createOutput.match(/id\s*=\s*"([^"]+)"/);

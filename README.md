@@ -45,17 +45,26 @@ cd tg-image
 npm install
 ```
 
-3. 配置环境变量:
+3. 登录到 Cloudflare 账号:
 
-修改 `wrangler.toml` 文件，填入你的 Telegram Bot Token 和 Chat ID:
+```bash
+npx wrangler login
+```
+
+这个命令会打开浏览器，引导你完成 Cloudflare 账号的登录过程。
+
+4. 配置环境变量:
+
+修改 `wrangler.toml` 文件，填入你的 Telegram Bot Token、Chat ID 和 JWT 密钥:
 
 ```toml
 [vars]
 TG_Bot_Token = "YOUR_BOT_TOKEN"
 TG_Chat_ID = "YOUR_CHAT_ID"
+JWT_SECRET = "YOUR_JWT_SECRET" # 用于用户认证的密钥，请更改为随机字符串
 ```
 
-4. 创建 Cloudflare KV 命名空间并部署:
+5. 创建 Cloudflare KV 命名空间并部署:
 
 ```bash
 # 创建 KV 命名空间并部署
@@ -66,6 +75,9 @@ npm run setup
 - 检查并创建必要的 KV 命名空间（如果不存在）
 - 自动更新 `wrangler.toml` 文件中的 KV 命名空间 ID
 - 部署项目到 Cloudflare Workers
+
+> **注意**：如果你使用的是 Wrangler 4.x 版本，KV 命名空间的命令格式已经改变。
+> 正确的命令格式是：`npx wrangler kv namespace create "img_url"`（注意 `kv` 和 `namespace` 之间没有冒号）
 
 你也可以分步执行：
 

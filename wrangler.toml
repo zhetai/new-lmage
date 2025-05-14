@@ -9,9 +9,11 @@ TG_Chat_ID = "-1002509744447"
 JWT_SECRET = "your-jwt-secret-key-change-this-in-production"
 
 # 注意：在部署前，请先创建这些 KV 命名空间，并将生成的 ID 填入下面的配置中
-# 使用以下命令创建 KV 命名空间：
-# npx wrangler kv:namespace create "img_url"
-# npx wrangler kv:namespace create "users"
+# 使用以下命令创建 KV 命名空间（Wrangler 4.x 版本）：
+# npx wrangler kv namespace create "img_url"
+# npx wrangler kv namespace create "users"
+#
+# 或者使用 npm run create-kv 命令自动创建 KV 命名空间并更新配置
 
 [[kv_namespaces]]
 binding = "img_url"
