@@ -226,7 +226,8 @@
             display: flex;
             flex-direction: column;
             height: 100%;
-            border: 1px solid transparent;
+            border: 2px solid transparent;
+            cursor: pointer;
         }
 
         body.dark-mode .image-card {
@@ -237,6 +238,60 @@
             transform: translateY(-5px);
             box-shadow: var(--shadow-lg);
             border-color: var(--primary-light);
+        }
+
+        /* 图片选择样式 */
+        .image-card.selected {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(var(--primary-light-rgb), 0.3);
+        }
+
+        .image-select {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 5;
+        }
+
+        .image-checkbox {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .image-checkbox-label {
+            display: block;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            position: relative;
+            transition: all var(--transition-fast);
+        }
+
+        .image-checkbox-label::after {
+            content: '';
+            position: absolute;
+            display: none;
+            left: 8px;
+            top: 4px;
+            width: 6px;
+            height: 12px;
+            border: solid var(--primary-color);
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .image-checkbox:checked + .image-checkbox-label {
+            background-color: white;
+        }
+
+        .image-checkbox:checked + .image-checkbox-label::after {
+            display: block;
         }
 
         .image-preview {
@@ -536,10 +591,17 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.6);
             z-index: 1000;
             align-items: center;
             justify-content: center;
+            backdrop-filter: blur(3px);
+            opacity: 0;
+            transition: opacity var(--transition);
+        }
+
+        .modal.active {
+            opacity: 1;
         }
 
         .modal-content {
@@ -547,8 +609,16 @@
             border-radius: var(--radius);
             padding: 2rem;
             width: 90%;
-            max-width: 500px;
+            max-width: 800px;
             box-shadow: var(--shadow-lg);
+            transform: translateY(20px);
+            transition: transform var(--transition);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
         }
 
         body.dark-mode .modal-content {
@@ -560,19 +630,38 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        body.dark-mode .modal-header {
+            border-color: var(--dark-border);
         }
 
         .modal-title {
             font-size: 1.5rem;
             font-weight: 600;
+            color: var(--primary-color);
         }
 
         .modal-close {
             background: none;
             border: none;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             cursor: pointer;
             color: var(--text-light);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all var(--transition-fast);
+        }
+
+        .modal-close:hover {
+            background-color: rgba(var(--primary-light-rgb), 0.1);
+            color: var(--primary-color);
         }
 
         body.dark-mode .modal-close {
@@ -581,36 +670,115 @@
 
         .modal-body {
             margin-bottom: 1.5rem;
-        }
-
-        .modal-footer {
             display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
+            gap: 2rem;
+            flex-wrap: wrap;
         }
 
-        .modal-btn {
-            padding: 0.75rem 1.5rem;
+        .edit-image-preview {
+            flex: 1;
+            min-width: 250px;
+            max-width: 300px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            background-color: rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body.dark-mode .edit-image-preview {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .edit-image-preview img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .edit-image-details {
+            flex: 2;
+            min-width: 300px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        body.dark-mode .form-group label {
+            color: var(--dark-text);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
             border-radius: var(--radius-sm);
             font-size: 1rem;
-            cursor: pointer;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             transition: all var(--transition-fast);
         }
 
-        .modal-btn-primary {
-            background: var(--primary-gradient);
-            color: white;
-            border: none;
-        }
-
-        .modal-btn-secondary {
-            background: none;
-            border: 1px solid var(--border-color);
-        }
-
-        body.dark-mode .modal-btn-secondary {
+        body.dark-mode .form-control {
+            background-color: var(--dark-bg);
             border-color: var(--dark-border);
             color: var(--dark-text);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(var(--primary-light-rgb), 0.2);
+        }
+
+        .info-text {
+            padding: 0.75rem 1rem;
+            background-color: rgba(var(--primary-light-rgb), 0.05);
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+        }
+
+        body.dark-mode .info-text {
+            background-color: rgba(var(--primary-light-rgb), 0.1);
+        }
+
+        .copy-link-container {
+            display: flex;
+            position: relative;
+        }
+
+        .copy-link-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all var(--transition-fast);
+        }
+
+        .copy-link-btn:hover {
+            background-color: rgba(var(--primary-light-rgb), 0.1);
+        }
+
+        .tags-input-container {
+            position: relative;
         }
 
         .tags-input {
@@ -622,11 +790,47 @@
             gap: 0.5rem;
             min-height: 2.5rem;
             background-color: var(--bg-color);
+            transition: all var(--transition-fast);
+        }
+
+        .tags-input:focus-within {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(var(--primary-light-rgb), 0.2);
         }
 
         body.dark-mode .tags-input {
             background-color: var(--dark-bg);
             border-color: var(--dark-border);
+        }
+
+        .tags-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+            box-shadow: var(--shadow);
+            z-index: 10;
+            max-height: 150px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        body.dark-mode .tags-suggestions {
+            background-color: var(--dark-card-bg);
+            border-color: var(--dark-border);
+        }
+
+        .tag-suggestion {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .tag-suggestion:hover {
+            background-color: rgba(var(--primary-light-rgb), 0.1);
         }
 
         .tag {
@@ -637,11 +841,28 @@
             padding: 0.25rem 0.5rem;
             border-radius: var(--radius-sm);
             font-size: 0.9rem;
+            transition: all var(--transition-fast);
+        }
+
+        .tag:hover {
+            background-color: var(--primary-dark);
         }
 
         .tag-remove {
-            margin-left: 0.25rem;
+            margin-left: 0.5rem;
             cursor: pointer;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: all var(--transition-fast);
+        }
+
+        .tag-remove:hover {
+            background-color: rgba(255, 255, 255, 0.4);
         }
 
         .tags-input input {
@@ -652,9 +873,131 @@
             min-width: 100px;
             background: transparent;
             color: var(--text-color);
+            font-size: 0.95rem;
         }
 
         body.dark-mode .tags-input input {
+            color: var(--dark-text);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        body.dark-mode .modal-footer {
+            border-color: var(--dark-border);
+        }
+
+        .modal-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modal-btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 6px rgba(var(--primary-dark-rgb), 0.2);
+        }
+
+        .modal-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(var(--primary-dark-rgb), 0.3);
+        }
+
+        .modal-btn-secondary {
+            background: none;
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-btn-secondary:hover {
+            background-color: rgba(var(--primary-light-rgb), 0.05);
+            border-color: var(--primary-light);
+        }
+
+        body.dark-mode .modal-btn-secondary {
+            border-color: var(--dark-border);
+            color: var(--dark-text);
+        }
+
+        /* 批量操作工具栏 */
+        .batch-toolbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--card-bg);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            transform: translateY(100%);
+            transition: transform var(--transition);
+        }
+
+        .batch-toolbar.active {
+            transform: translateY(0);
+        }
+
+        body.dark-mode .batch-toolbar {
+            background-color: var(--dark-card-bg);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .batch-info {
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+
+        .batch-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .batch-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .batch-btn:hover {
+            background-color: rgba(var(--primary-light-rgb), 0.1);
+            border-color: var(--primary-light);
+        }
+
+        .batch-btn-danger {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .batch-btn-danger:hover {
+            background-color: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        body.dark-mode .batch-btn {
+            background-color: var(--dark-bg);
+            border-color: var(--dark-border);
             color: var(--dark-text);
         }
 
@@ -1033,21 +1376,126 @@
                 <button class="modal-close" id="closeModal">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <label for="editFileName">文件名</label>
-                    <input type="text" id="editFileName" class="form-control">
+                <div class="edit-image-preview">
+                    <img id="editImagePreview" src="" alt="图片预览">
                 </div>
-                <div class="form-group">
-                    <label for="editTags">标签</label>
-                    <div id="tagsInput" class="tags-input">
-                        <input type="text" id="tagInput" placeholder="输入标签后按回车...">
+                <div class="edit-image-details">
+                    <div class="form-group">
+                        <label for="editFileName">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                                <polyline points="13 2 13 9 20 9"></polyline>
+                            </svg>
+                            文件名
+                        </label>
+                        <input type="text" id="editFileName" class="form-control" placeholder="输入文件名...">
+                    </div>
+                    <div class="form-group">
+                        <label for="editTags">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                                <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                            </svg>
+                            标签
+                        </label>
+                        <div class="tags-input-container">
+                            <div id="tagsInput" class="tags-input">
+                                <input type="text" id="tagInput" placeholder="输入标签后按回车...">
+                            </div>
+                            <div class="tags-suggestions" id="tagsSuggestions">
+                                <!-- 标签建议将通过JavaScript动态生成 -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            上传时间
+                        </label>
+                        <div class="info-text" id="editUploadTime">-</div>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="4 7 4 4 20 4 20 7"></polyline>
+                                <line x1="9" y1="20" x2="15" y2="20"></line>
+                                <line x1="12" y1="4" x2="12" y2="20"></line>
+                            </svg>
+                            文件大小
+                        </label>
+                        <div class="info-text" id="editFileSize">-</div>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                            图片链接
+                        </label>
+                        <div class="copy-link-container">
+                            <input type="text" id="editImageLink" class="form-control" readonly>
+                            <button id="copyEditLink" class="copy-link-btn" data-clipboard-target="#editImageLink">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button id="cancelEdit" class="modal-btn modal-btn-secondary">取消</button>
-                <button id="saveEdit" class="modal-btn modal-btn-primary">保存</button>
+                <button id="saveEdit" class="modal-btn modal-btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                        <polyline points="7 3 7 8 15 8"></polyline>
+                    </svg>
+                    保存
+                </button>
             </div>
+        </div>
+    </div>
+
+    <!-- 批量操作工具栏 -->
+    <div id="batchToolbar" class="batch-toolbar">
+        <div class="batch-info">已选择 <span id="selectedCount">0</span> 张图片</div>
+        <div class="batch-actions">
+            <button id="batchCopy" class="batch-btn" title="复制所有选中图片链接">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                复制链接
+            </button>
+            <button id="batchAddTag" class="batch-btn" title="为所有选中图片添加标签">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                    <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                </svg>
+                添加标签
+            </button>
+            <button id="batchDelete" class="batch-btn batch-btn-danger" title="删除所有选中图片">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+                删除
+            </button>
+            <button id="batchCancel" class="batch-btn" title="取消选择">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+                取消
+            </button>
         </div>
     </div>
 

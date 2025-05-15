@@ -12,6 +12,8 @@ let currentEditingImageId = null;
 let allTags = new Set(); // 存储所有标签
 let currentSortMethod = 'newest'; // 默认排序方式
 let currentTagFilter = ''; // 当前标签过滤器
+let selectedImages = new Set(); // 存储选中的图片ID
+let isSelectionMode = false; // 是否处于选择模式
 
 // 初始化仪表盘
 function initDashboard() {
@@ -29,6 +31,25 @@ function initDashboard() {
 
     // 初始化图片查看器
     initImageViewer();
+
+    // 初始化批量操作功能
+    initBatchOperations();
+
+    // 初始化复制链接功能
+    new ClipboardJS('#copyEditLink').on('success', function(e) {
+        const button = e.trigger;
+        const originalHTML = button.innerHTML;
+
+        button.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        `;
+
+        setTimeout(() => {
+            button.innerHTML = originalHTML;
+        }, 2000);
+    });
 }
 
 // 加载用户图片
@@ -183,6 +204,11 @@ function renderImages(images) {
         card.className = 'image-card';
         card.dataset.id = image.id;
 
+        // 如果图片被选中，添加选中样式
+        if (selectedImages.has(image.id)) {
+            card.classList.add('selected');
+        }
+
         // 格式化文件大小
         const fileSize = formatFileSize(image.fileSize);
 
@@ -198,6 +224,12 @@ function renderImages(images) {
             : '';
 
         card.innerHTML = `
+            ${isSelectionMode ? `
+            <div class="image-select">
+                <input type="checkbox" class="image-checkbox" id="check-${image.id}" ${selectedImages.has(image.id) ? 'checked' : ''}>
+                <label for="check-${image.id}" class="image-checkbox-label"></label>
+            </div>
+            ` : ''}
             <div class="image-preview" data-id="${image.id}" data-url="${image.url}">
                 <img src="${image.url}" alt="${image.fileName}" loading="lazy">
                 <div class="image-zoom-icon">
@@ -277,7 +309,8 @@ function renderImages(images) {
 
     // 添加编辑按钮事件
     document.querySelectorAll('.edit-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation(); // 防止触发卡片选择
             const imageId = btn.dataset.id;
             openEditModal(imageId);
         });
@@ -285,7 +318,8 @@ function renderImages(images) {
 
     // 添加删除按钮事件
     document.querySelectorAll('.delete-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation(); // 防止触发卡片选择
             const imageId = btn.dataset.id;
             confirmDeleteImage(imageId);
         });
@@ -293,7 +327,11 @@ function renderImages(images) {
 
     // 添加图片预览点击事件
     document.querySelectorAll('.image-preview').forEach(preview => {
-        preview.addEventListener('click', () => {
+        preview.addEventListener('click', (e) => {
+            if (isSelectionMode) {
+                e.stopPropagation(); // 在选择模式下，点击预览不打开查看器
+                return;
+            }
             const imageId = preview.dataset.id;
             const imageUrl = preview.dataset.url;
             openImageViewer(imageId, imageUrl);
@@ -308,6 +346,50 @@ function renderImages(images) {
             filterByTag(tagName);
         });
     });
+
+    // 添加图片卡片选择事件
+    if (isSelectionMode) {
+        document.querySelectorAll('.image-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const imageId = card.dataset.id;
+                toggleImageSelection(imageId, card);
+            });
+        });
+
+        document.querySelectorAll('.image-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', (e) => {
+                e.stopPropagation(); // 防止触发卡片点击事件
+                const imageId = checkbox.id.replace('check-', '');
+                const card = document.querySelector(`.image-card[data-id="${imageId}"]`);
+                toggleImageSelection(imageId, card, checkbox.checked);
+            });
+        });
+    }
+}
+
+// 切换图片选择状态
+function toggleImageSelection(imageId, card, forceState) {
+    const isSelected = forceState !== undefined ? forceState : !selectedImages.has(imageId);
+
+    if (isSelected) {
+        selectedImages.add(imageId);
+        card.classList.add('selected');
+        const checkbox = document.getElementById(`check-${imageId}`);
+        if (checkbox) checkbox.checked = true;
+    } else {
+        selectedImages.delete(imageId);
+        card.classList.remove('selected');
+        const checkbox = document.getElementById(`check-${imageId}`);
+        if (checkbox) checkbox.checked = false;
+    }
+
+    // 更新选中计数
+    updateSelectedCount();
+
+    // 如果没有选中的图片，退出选择模式
+    if (selectedImages.size === 0 && isSelectionMode) {
+        toggleSelectionMode();
+    }
 }
 
 // 渲染分页
@@ -526,16 +608,30 @@ function initEditModal() {
     const saveEdit = document.getElementById('saveEdit');
     const tagInput = document.getElementById('tagInput');
     const tagsInput = document.getElementById('tagsInput');
+    const tagsSuggestions = document.getElementById('tagsSuggestions');
 
     // 关闭模态框
     function closeEditModal() {
-        editModal.style.display = 'none';
-        currentEditingImageId = null;
-        currentTags = [];
+        editModal.classList.remove('active');
+        setTimeout(() => {
+            editModal.style.display = 'none';
+            currentEditingImageId = null;
+            currentTags = [];
 
-        // 清空标签输入
-        const tagElements = tagsInput.querySelectorAll('.tag');
-        tagElements.forEach(tag => tag.remove());
+            // 清空标签输入
+            const tagElements = tagsInput.querySelectorAll('.tag');
+            tagElements.forEach(tag => tag.remove());
+
+            // 清空其他字段
+            document.getElementById('editFileName').value = '';
+            document.getElementById('editImagePreview').src = '';
+            document.getElementById('editUploadTime').textContent = '-';
+            document.getElementById('editFileSize').textContent = '-';
+            document.getElementById('editImageLink').value = '';
+
+            // 隐藏标签建议
+            tagsSuggestions.style.display = 'none';
+        }, 300);
     }
 
     // 关闭按钮
@@ -549,7 +645,7 @@ function initEditModal() {
         }
     });
 
-    // 添加标签
+    // 标签输入处理
     tagInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ',') {
             e.preventDefault();
@@ -558,7 +654,48 @@ function initEditModal() {
             if (tag && !currentTags.includes(tag)) {
                 addTag(tag);
                 tagInput.value = '';
+                tagsSuggestions.style.display = 'none';
             }
+        }
+    });
+
+    // 标签输入时显示建议
+    tagInput.addEventListener('input', () => {
+        const inputValue = tagInput.value.trim().toLowerCase();
+
+        if (inputValue.length < 1) {
+            tagsSuggestions.style.display = 'none';
+            return;
+        }
+
+        // 过滤标签建议
+        const filteredTags = Array.from(allTags)
+            .filter(tag => tag.toLowerCase().includes(inputValue) && !currentTags.includes(tag))
+            .slice(0, 5); // 最多显示5个建议
+
+        if (filteredTags.length > 0) {
+            tagsSuggestions.innerHTML = '';
+            filteredTags.forEach(tag => {
+                const suggestion = document.createElement('div');
+                suggestion.className = 'tag-suggestion';
+                suggestion.textContent = tag;
+                suggestion.addEventListener('click', () => {
+                    addTag(tag);
+                    tagInput.value = '';
+                    tagsSuggestions.style.display = 'none';
+                });
+                tagsSuggestions.appendChild(suggestion);
+            });
+            tagsSuggestions.style.display = 'block';
+        } else {
+            tagsSuggestions.style.display = 'none';
+        }
+    });
+
+    // 点击其他地方时隐藏标签建议
+    document.addEventListener('click', (e) => {
+        if (!tagsSuggestions.contains(e.target) && e.target !== tagInput) {
+            tagsSuggestions.style.display = 'none';
         }
     });
 
@@ -600,12 +737,32 @@ function initEditModal() {
             alert(`更新失败: ${error.message}`);
         }
     });
+
+    // 初始化复制链接功能
+    new ClipboardJS('#copyEditLink').on('success', function(e) {
+        const button = e.trigger;
+        const originalHTML = button.innerHTML;
+
+        button.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        `;
+
+        setTimeout(() => {
+            button.innerHTML = originalHTML;
+        }, 2000);
+    });
 }
 
 // 打开编辑模态框
 function openEditModal(imageId) {
     const editModal = document.getElementById('editModal');
     const editFileName = document.getElementById('editFileName');
+    const editImagePreview = document.getElementById('editImagePreview');
+    const editUploadTime = document.getElementById('editUploadTime');
+    const editFileSize = document.getElementById('editFileSize');
+    const editImageLink = document.getElementById('editImageLink');
     const tagsInput = document.getElementById('tagsInput');
     const tagInput = document.getElementById('tagInput');
 
@@ -616,8 +773,23 @@ function openEditModal(imageId) {
     // 设置当前编辑的图片ID
     currentEditingImageId = imageId;
 
+    // 设置图片预览
+    editImagePreview.src = image.url;
+    editImagePreview.alt = image.fileName;
+
     // 设置文件名
     editFileName.value = image.fileName;
+
+    // 设置上传时间
+    const uploadDate = new Date(image.uploadTime).toLocaleDateString();
+    const uploadTime = new Date(image.uploadTime).toLocaleTimeString();
+    editUploadTime.textContent = `${uploadDate} ${uploadTime}`;
+
+    // 设置文件大小
+    editFileSize.textContent = formatFileSize(image.fileSize);
+
+    // 设置图片链接
+    editImageLink.value = `${window.location.origin}${image.url}`;
 
     // 清空标签
     const tagElements = tagsInput.querySelectorAll('.tag');
@@ -631,6 +803,9 @@ function openEditModal(imageId) {
 
     // 显示模态框
     editModal.style.display = 'flex';
+    setTimeout(() => {
+        editModal.classList.add('active');
+    }, 10);
 }
 
 // 添加标签
@@ -706,6 +881,227 @@ function formatFileSize(bytes) {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
 
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+// 初始化批量操作功能
+function initBatchOperations() {
+    const batchToolbar = document.getElementById('batchToolbar');
+    const batchCopy = document.getElementById('batchCopy');
+    const batchAddTag = document.getElementById('batchAddTag');
+    const batchDelete = document.getElementById('batchDelete');
+    const batchCancel = document.getElementById('batchCancel');
+
+    // 添加长按事件以进入选择模式
+    let longPressTimer;
+    document.querySelectorAll('.image-card').forEach(card => {
+        card.addEventListener('mousedown', () => {
+            if (isSelectionMode) return; // 已经在选择模式中
+
+            longPressTimer = setTimeout(() => {
+                toggleSelectionMode();
+                const imageId = card.dataset.id;
+                toggleImageSelection(imageId, card, true);
+            }, 500); // 500ms长按
+        });
+
+        card.addEventListener('mouseup', () => {
+            clearTimeout(longPressTimer);
+        });
+
+        card.addEventListener('mouseleave', () => {
+            clearTimeout(longPressTimer);
+        });
+    });
+
+    // 添加批量操作按钮事件
+    batchCancel.addEventListener('click', () => {
+        toggleSelectionMode(false);
+    });
+
+    // 批量复制链接
+    batchCopy.addEventListener('click', () => {
+        if (selectedImages.size === 0) return;
+
+        const links = [];
+        selectedImages.forEach(id => {
+            const image = currentImages.find(img => img.id === id);
+            if (image) {
+                links.push(`${window.location.origin}${image.url}`);
+            }
+        });
+
+        if (links.length > 0) {
+            const textarea = document.createElement('textarea');
+            textarea.value = links.join('\n');
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            alert(`已复制 ${links.length} 个链接到剪贴板`);
+        }
+    });
+
+    // 批量添加标签
+    batchAddTag.addEventListener('click', () => {
+        if (selectedImages.size === 0) return;
+
+        // 创建一个简单的输入对话框
+        const tag = prompt('请输入要添加的标签:');
+        if (!tag || tag.trim() === '') return;
+
+        batchAddTagToImages(tag.trim());
+    });
+
+    // 批量删除
+    batchDelete.addEventListener('click', () => {
+        if (selectedImages.size === 0) return;
+
+        if (confirm(`确定要删除选中的 ${selectedImages.size} 张图片吗？此操作不可撤销。`)) {
+            batchDeleteImages();
+        }
+    });
+}
+
+// 切换选择模式
+function toggleSelectionMode(forceState) {
+    isSelectionMode = forceState !== undefined ? forceState : !isSelectionMode;
+    const batchToolbar = document.getElementById('batchToolbar');
+
+    if (isSelectionMode) {
+        // 进入选择模式
+        batchToolbar.classList.add('active');
+        document.body.classList.add('selection-mode');
+
+        // 清空已选择的图片
+        selectedImages.clear();
+        updateSelectedCount();
+
+        // 重新渲染图片以显示复选框
+        renderImages(currentImages);
+    } else {
+        // 退出选择模式
+        batchToolbar.classList.remove('active');
+        document.body.classList.remove('selection-mode');
+
+        // 清空已选择的图片
+        selectedImages.clear();
+
+        // 重新渲染图片以隐藏复选框
+        renderImages(currentImages);
+    }
+}
+
+// 更新选中计数
+function updateSelectedCount() {
+    const selectedCount = document.getElementById('selectedCount');
+    selectedCount.textContent = selectedImages.size;
+}
+
+// 批量添加标签到图片
+async function batchAddTagToImages(tag) {
+    if (selectedImages.size === 0 || !tag) return;
+
+    let successCount = 0;
+    let failCount = 0;
+
+    // 显示加载状态
+    alert(`正在处理 ${selectedImages.size} 张图片...`);
+
+    // 逐个处理图片
+    for (const imageId of selectedImages) {
+        try {
+            const image = currentImages.find(img => img.id === imageId);
+            if (!image) continue;
+
+            // 检查标签是否已存在
+            const currentImageTags = image.tags || [];
+            if (currentImageTags.includes(tag)) {
+                successCount++;
+                continue; // 标签已存在，跳过
+            }
+
+            // 添加新标签
+            const newTags = [...currentImageTags, tag];
+
+            const response = await fetch(`/api/images/${imageId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...getAuthHeader()
+                },
+                body: JSON.stringify({
+                    fileName: image.fileName,
+                    tags: newTags
+                })
+            });
+
+            if (response.ok) {
+                successCount++;
+            } else {
+                failCount++;
+            }
+        } catch (error) {
+            console.error(`为图片 ${imageId} 添加标签失败:`, error);
+            failCount++;
+        }
+    }
+
+    // 显示结果
+    if (failCount === 0) {
+        alert(`成功为 ${successCount} 张图片添加标签`);
+    } else {
+        alert(`成功: ${successCount} 张, 失败: ${failCount} 张`);
+    }
+
+    // 重新加载图片列表
+    loadUserImages(currentPage);
+
+    // 退出选择模式
+    toggleSelectionMode(false);
+}
+
+// 批量删除图片
+async function batchDeleteImages() {
+    if (selectedImages.size === 0) return;
+
+    let successCount = 0;
+    let failCount = 0;
+
+    // 显示加载状态
+    alert(`正在删除 ${selectedImages.size} 张图片...`);
+
+    // 逐个删除图片
+    for (const imageId of selectedImages) {
+        try {
+            const response = await fetch(`/api/images/${imageId}`, {
+                method: 'DELETE',
+                headers: getAuthHeader()
+            });
+
+            if (response.ok) {
+                successCount++;
+            } else {
+                failCount++;
+            }
+        } catch (error) {
+            console.error(`删除图片 ${imageId} 失败:`, error);
+            failCount++;
+        }
+    }
+
+    // 显示结果
+    if (failCount === 0) {
+        alert(`成功删除 ${successCount} 张图片`);
+    } else {
+        alert(`成功: ${successCount} 张, 失败: ${failCount} 张`);
+    }
+
+    // 重新加载图片列表
+    loadUserImages(currentPage);
+
+    // 退出选择模式
+    toggleSelectionMode(false);
 }
 
 // 页面加载时初始化
