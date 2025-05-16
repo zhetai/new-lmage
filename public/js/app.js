@@ -325,9 +325,27 @@ function initUpload() {
             }
         }
 
-        // 显示上传中状态
-        uploadStatus.innerHTML = `<span class="loading-text">正在上传${files.length}张图片</span>`;
+        // 计算总文件大小
+        let totalSize = 0;
+        for (let i = 0; i < files.length; i++) {
+            totalSize += files[i].size;
+        }
+
+        // 创建进度条HTML
+        uploadStatus.innerHTML = `
+            <div class="upload-progress">
+                <span class="loading-text">正在上传${files.length}张图片</span>
+                <div class="progress-container">
+                    <div class="progress-bar" id="uploadProgressBar" style="width: 0%"></div>
+                </div>
+                <span class="progress-text" id="uploadProgressText">0%</span>
+            </div>
+        `;
         uploadStatus.className = 'upload-status loading';
+
+        // 获取进度条元素
+        const progressBar = document.getElementById('uploadProgressBar');
+        const progressText = document.getElementById('uploadProgressText');
 
         // 准备表单数据
         const formData = new FormData();
@@ -339,33 +357,60 @@ function initUpload() {
         const headers = getAuthHeader();
         console.log('上传请求 - 认证头:', headers);
 
-        // 发送请求
-        fetch('/upload', {
-            method: 'POST',
-            headers: headers, // 添加认证头
-            body: formData
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('上传失败，服务器响应错误');
+        // 创建 XMLHttpRequest 以便跟踪上传进度
+        const xhr = new XMLHttpRequest();
+        
+        // 监听上传进度
+        xhr.upload.addEventListener('progress', (event) => {
+            if (event.lengthComputable) {
+                const percentComplete = Math.round((event.loaded / event.total) * 100);
+                progressBar.style.width = percentComplete + '%';
+                progressText.textContent = percentComplete + '%';
             }
-            return response.json();
-        })
-        .then(data => {
-            if (data.error) {
-                throw new Error(data.error);
-            }
-
-            // 上传成功
-            uploadStatus.textContent = `上传成功！共${data.length}张图片`;
-            uploadStatus.className = 'upload-status success';
-
-            // 显示结果
-            showResults(data, files);
-        })
-        .catch(error => {
-            showError(`上传失败: ${error.message}`);
         });
+
+        // 设置请求
+        xhr.open('POST', '/upload', true);
+        
+        // 添加认证头
+        if (headers.Authorization) {
+            xhr.setRequestHeader('Authorization', headers.Authorization);
+        }
+
+        // 设置响应类型
+        xhr.responseType = 'json';
+
+        // 处理请求完成
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                const data = xhr.response;
+                if (data.error) {
+                    showError(data.error);
+                } else {
+                    // 上传成功
+                    uploadStatus.innerHTML = `
+                        <div class="upload-success">
+                            <span class="success-icon">✓</span>
+                            <span class="success-text">上传成功！共${data.length}张图片</span>
+                        </div>
+                    `;
+                    uploadStatus.className = 'upload-status success';
+
+                    // 显示结果
+                    showResults(data, files);
+                }
+            } else {
+                showError(`上传失败: 服务器返回 ${xhr.status}`);
+            }
+        };
+
+        // 处理错误
+        xhr.onerror = function() {
+            showError('上传失败: 网络错误');
+        };
+
+        // 发送请求
+        xhr.send(formData);
     }
 
     // 显示错误信息

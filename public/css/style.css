@@ -657,6 +657,83 @@ body.dark-mode .upload-status {
     color: var(--success-color);
 }
 
+/* 上传进度条样式 */
+.upload-progress {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: var(--spacing-sm);
+}
+
+.progress-container {
+    width: 100%;
+    height: 8px;
+    background-color: rgba(var(--primary-light-rgb), 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: var(--spacing-sm) 0;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    border-radius: 4px;
+    transition: width 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.4) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    animation: progressShine 1.5s infinite;
+}
+
+.progress-text {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+body.dark-mode .progress-container {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+body.dark-mode .progress-text {
+    color: var(--accent-color);
+}
+
+.upload-success {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+}
+
+.success-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(135deg, var(--success-color), #0ea5e9);
+    color: white;
+    border-radius: 50%;
+    font-size: 14px;
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+}
+
 /* 结果区域 - 现代化设计 */
 .result-container {
     background-color: var(--card-bg);
@@ -1492,36 +1569,34 @@ body.dark-mode .footer {
 /* 移动端特定优化 */
 @media (max-width: 576px) {
     .app-container {
-        padding: 0 var(--spacing);
+        padding: var(--spacing-sm) var(--spacing);
     }
 
     .hero {
-        margin: var(--spacing) 0;
+        min-height: 60vh;
         padding: var(--spacing-lg) var(--spacing-sm);
-        border-radius: var(--radius);
     }
 
     .hero h2 {
         font-size: 1.7rem;
-        margin-bottom: var(--spacing-sm);
+        padding: 0 var(--spacing-sm);
     }
 
     .hero p {
         font-size: 1rem;
-        padding: 0 var(--spacing-sm);
+        max-width: 90%;
     }
 
     .upload-container {
-        padding: var(--spacing);
-        border-radius: var(--radius);
+        padding: var(--spacing-md) var(--spacing-sm);
     }
 
     .upload-area {
-        padding: var(--spacing);
+        padding: var(--spacing-lg) var(--spacing-sm);
     }
 
     .upload-icon {
-        margin-bottom: var(--spacing-sm);
+        margin-bottom: var(--spacing);
     }
 
     .upload-icon svg {
@@ -1530,13 +1605,39 @@ body.dark-mode .footer {
     }
 
     .upload-text {
-        font-size: 0.9rem;
-        margin-bottom: var(--spacing-xs);
+        font-size: 0.95rem;
+    }
+    
+    /* 进度条移动端样式 */
+    .upload-progress {
+        width: 100%;
+    }
+    
+    .progress-container {
+        height: 6px;
+    }
+    
+    .progress-text {
+        font-size: 12px;
+    }
+    
+    .upload-success {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+    }
+    
+    .success-icon {
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
     }
 
     .feature-card {
-        margin-bottom: var(--spacing);
-        transform: none !important;
+        padding: var(--spacing-lg) var(--spacing);
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
     }
 
     .feature-card:hover {
