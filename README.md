@@ -10,8 +10,6 @@
     <a href="#部署指南"><img src="https://img.shields.io/badge/部署-Deploy-orange?style=for-the-badge&logo=cloudflare" alt="部署"></a>
     <a href="#使用方法"><img src="https://img.shields.io/badge/使用-Usage-green?style=for-the-badge&logo=bookstack" alt="使用"></a>
     <a href="#-更新日志"><img src="https://img.shields.io/badge/更新-Changelog-red?style=for-the-badge&logo=git" alt="更新"></a>
-    <img src="https://img.shields.io/badge/版本-1.5.0-blueviolet?style=for-the-badge&logo=verizon" alt="版本">
-    <img src="https://img.shields.io/badge/开源协议-MIT-yellow?style=for-the-badge&logo=opensource" alt="开源协议">
   </p>
 </div>
 
@@ -22,10 +20,6 @@
 <p align="center">
   特别支持<strong>原图上传</strong>和<strong>原图下载</strong>功能，确保您的图片在分享过程中保持原始质量，不会被压缩或降低画质。
 </p>
-
-<div align="center">
-  <img src="public/images/screenshot.png" alt="TG-Image 界面预览" width="90%">
-</div>
 
 <hr>
 
@@ -42,35 +36,6 @@
 | 📚 批量上传 | 👤 用户系统 | 🏷️ 图片管理 |
 |:------------:|:------------:|:------------:|
 | 支持同时选择或拖放多张图片，提高工作效率 | 支持用户注册、登录，管理个人上传的图片，保护隐私 | 支持图片列表、删除、重命名、标签管理和搜索功能 |
-
-### 🆕 新增特性
-
-<table>
-  <tr>
-    <td align="center">📊</td>
-    <td><b>实时上传进度条</b>：直观显示上传进度，提升用户体验</td>
-  </tr>
-  <tr>
-    <td align="center">⏱️</td>
-    <td><b>上传速度和剩余时间</b>：精确计算上传速度和预估完成时间</td>
-  </tr>
-  <tr>
-    <td align="center">✨</td>
-    <td><b>增强拖放区域视觉反馈</b>：拖拽文件时提供更明显的视觉提示</td>
-  </tr>
-  <tr>
-    <td align="center">📱</td>
-    <td><b>优化移动端体验</b>：针对不同屏幕尺寸优化布局和交互</td>
-  </tr>
-  <tr>
-    <td align="center">🔒</td>
-    <td><b>增强安全性</b>：新增XSS和CSRF保护机制</td>
-  </tr>
-  <tr>
-    <td align="center">📝</td>
-    <td><b>完善错误处理和日志</b>：更详细的错误记录和异常处理</td>
-  </tr>
-</table>
 
 ## 🚀 部署指南
 
@@ -191,22 +156,18 @@ npm run deploy
   </tr>
   <tr>
     <td align="center">3️⃣</td>
-    <td>观察实时上传进度条、上传速度和预估剩余时间</td>
-  </tr>
-  <tr>
-    <td align="center">4️⃣</td>
     <td>上传完成后，系统会自动生成链接（所有图片均以原图质量上传）</td>
   </tr>
   <tr>
-    <td align="center">5️⃣</td>
+    <td align="center">4️⃣</td>
     <td>如果上传了多张图片，可在图片列表中点击查看不同图片的详情</td>
   </tr>
   <tr>
-    <td align="center">6️⃣</td>
+    <td align="center">5️⃣</td>
     <td>复制需要的链接格式（直接链接、HTML、Markdown）</td>
   </tr>
   <tr>
-    <td align="center">7️⃣</td>
+    <td align="center">6️⃣</td>
     <td>分享链接给他人，对方打开链接时将看到原图，无任何压缩或质量损失</td>
   </tr>
 </table>
@@ -282,21 +243,6 @@ npm run deploy
       <td>
         <img src="https://img.shields.io/badge/Wrangler_CLI-F38020?style=flat-square&logo=cloudflare&logoColor=white" alt="Wrangler CLI">
         <img src="https://img.shields.io/badge/Cloudflare_Pages-F38020?style=flat-square&logo=cloudflare&logoColor=white" alt="Cloudflare Pages">
-      </td>
-    </tr>
-    <tr>
-      <td align="center"><img src="https://img.shields.io/badge/安全-Security-red?style=for-the-badge" alt="安全"></td>
-      <td>
-        <img src="https://img.shields.io/badge/XSS_Protection-2B3A42?style=flat-square&logo=security&logoColor=white" alt="XSS Protection">
-        <img src="https://img.shields.io/badge/CSRF_Protection-2B3A42?style=flat-square&logo=security&logoColor=white" alt="CSRF Protection">
-        <img src="https://img.shields.io/badge/JWT-000000?style=flat-square&logo=json-web-tokens&logoColor=white" alt="JWT">
-      </td>
-    </tr>
-    <tr>
-      <td align="center"><img src="https://img.shields.io/badge/优化-Optimization-blueviolet?style=for-the-badge" alt="优化"></td>
-      <td>
-        <img src="https://img.shields.io/badge/响应式设计-563D7C?style=flat-square&logo=bootstrap&logoColor=white" alt="响应式设计">
-        <img src="https://img.shields.io/badge/性能优化-4285F4?style=flat-square&logo=google-chrome&logoColor=white" alt="性能优化">
       </td>
     </tr>
   </table>
