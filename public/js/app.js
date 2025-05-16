@@ -29,16 +29,27 @@ window.addEventListener('load', () => {
 
 // 获取认证头
 function getAuthHeader() {
-    const token = localStorage.getItem('token');
-    const isLoggedIn = !!token;
-    console.log('认证状态:', isLoggedIn ? '已登录' : '未登录');
-    if (isLoggedIn) {
-        console.log('添加认证头');
-        return { 'Authorization': `Bearer ${token}` };
-    } else {
-        console.log('无认证头');
-        return {};
+    const headers = {};
+    
+    // 从localStorage获取token
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
     }
+    
+    // 获取CSRF令牌并添加到请求头
+    const csrfToken = getCookie('csrf_token');
+    if (csrfToken) {
+        headers['X-CSRF-Token'] = csrfToken;
+    }
+    
+    return headers;
+}
+
+// 获取指定名称的cookie值
+function getCookie(name) {
+    const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+    return cookieValue ? cookieValue.pop() : '';
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -262,6 +273,24 @@ function initUpload() {
     const mdCode = document.getElementById('mdCode');
     const uploadAgainBtn = document.getElementById('uploadAgainBtn');
 
+    // 添加进度条容器
+    let progressContainer = document.getElementById('progressContainer');
+    if (!progressContainer) {
+        progressContainer = document.createElement('div');
+        progressContainer.id = 'progressContainer';
+        progressContainer.className = 'progress-container';
+        progressContainer.innerHTML = `
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-info" id="progressInfo"></div>
+        `;
+        // 将进度条插入到上传状态上方
+        dropArea.insertBefore(progressContainer, uploadStatus);
+    }
+    const progressFill = document.getElementById('progressFill');
+    const progressInfo = document.getElementById('progressInfo');
+    
     // 点击上传区域触发文件选择
     dropArea.addEventListener('click', (e) => {
         // 防止点击到上传状态区域时触发文件选择
@@ -309,6 +338,11 @@ function initUpload() {
         }
     });
 
+    // 添加触摸设备支持
+    if ('ontouchstart' in window) {
+        enableMobileUpload(dropArea, fileInput);
+    }
+
     // 处理多个文件上传
     function handleFiles(files) {
         // 检查所有文件是否都是图片
@@ -325,9 +359,20 @@ function initUpload() {
             }
         }
 
+        // 计算总文件大小
+        let totalSize = 0;
+        for (let i = 0; i < files.length; i++) {
+            totalSize += files[i].size;
+        }
+
         // 显示上传中状态
         uploadStatus.innerHTML = `<span class="loading-text">正在上传${files.length}张图片</span>`;
         uploadStatus.className = 'upload-status loading';
+        
+        // 重置并显示进度条
+        progressContainer.style.display = 'block';
+        progressFill.style.width = '0%';
+        progressInfo.textContent = '准备上传...';
 
         // 准备表单数据
         const formData = new FormData();
@@ -339,39 +384,135 @@ function initUpload() {
         const headers = getAuthHeader();
         console.log('上传请求 - 认证头:', headers);
 
-        // 发送请求
-        fetch('/upload', {
-            method: 'POST',
-            headers: headers, // 添加认证头
-            body: formData
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('上传失败，服务器响应错误');
+        // 创建一个XMLHttpRequest以支持进度监控
+        const xhr = new XMLHttpRequest();
+        
+        // 上传速度计算变量
+        let startTime = Date.now();
+        let loadedPrev = 0;
+        let speedUpdateInterval;
+        
+        // 监听上传进度
+        xhr.upload.addEventListener('progress', (event) => {
+            if (event.lengthComputable) {
+                // 计算完成百分比
+                const percent = Math.round((event.loaded / event.total) * 100);
+                progressFill.style.width = `${percent}%`;
+                
+                // 计算上传速度
+                const currentTime = Date.now();
+                const elapsedTime = (currentTime - startTime) / 1000; // 转换为秒
+                const uploadedBytes = event.loaded - loadedPrev;
+                
+                // 避免频繁更新导致的闪烁，每500ms更新一次信息
+                if (!speedUpdateInterval) {
+                    speedUpdateInterval = setInterval(() => {
+                        const currentSpeed = uploadedBytes / elapsedTime; // 字节/秒
+                        const totalSeconds = (event.total - event.loaded) / currentSpeed;
+                        
+                        // 格式化速度和剩余时间
+                        let speedText = '';
+                        if (currentSpeed < 1024) {
+                            speedText = `${currentSpeed.toFixed(2)} B/s`;
+                        } else if (currentSpeed < 1024 * 1024) {
+                            speedText = `${(currentSpeed / 1024).toFixed(2)} KB/s`;
+                        } else {
+                            speedText = `${(currentSpeed / (1024 * 1024)).toFixed(2)} MB/s`;
+                        }
+                        
+                        // 格式化剩余时间
+                        let timeText = '';
+                        if (totalSeconds < 60) {
+                            timeText = `${Math.round(totalSeconds)}秒`;
+                        } else if (totalSeconds < 3600) {
+                            timeText = `${Math.floor(totalSeconds / 60)}分${Math.round(totalSeconds % 60)}秒`;
+                        } else {
+                            timeText = `${Math.floor(totalSeconds / 3600)}时${Math.floor((totalSeconds % 3600) / 60)}分`;
+                        }
+                        
+                        // 更新进度信息
+                        const loadedSize = formatFileSize(event.loaded);
+                        const totalSize = formatFileSize(event.total);
+                        progressInfo.innerHTML = `${percent}% · ${loadedSize}/${totalSize} · ${speedText} · 剩余时间: ${timeText}`;
+                        
+                        // 重置计数器
+                        loadedPrev = event.loaded;
+                        startTime = currentTime;
+                    }, 500);
+                }
             }
-            return response.json();
-        })
-        .then(data => {
-            if (data.error) {
-                throw new Error(data.error);
-            }
-
-            // 上传成功
-            uploadStatus.textContent = `上传成功！共${data.length}张图片`;
-            uploadStatus.className = 'upload-status success';
-
-            // 显示结果
-            showResults(data, files);
-        })
-        .catch(error => {
-            showError(`上传失败: ${error.message}`);
         });
+        
+        // 上传完成后清除定时器
+        xhr.upload.addEventListener('load', () => {
+            clearInterval(speedUpdateInterval);
+            progressFill.style.width = '100%';
+            progressInfo.textContent = '处理中...';
+        });
+        
+        // 设置请求
+        xhr.open('POST', '/upload', true);
+        
+        // 设置请求头
+        Object.keys(headers).forEach(key => {
+            xhr.setRequestHeader(key, headers[key]);
+        });
+        
+        // 处理响应
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    try {
+                        const data = JSON.parse(xhr.responseText);
+                        if (data.error) {
+                            throw new Error(data.error);
+                        }
+                        
+                        // 上传成功
+                        uploadStatus.textContent = `上传成功！共${data.length}张图片`;
+                        uploadStatus.className = 'upload-status success';
+                        
+                        // 隐藏进度条
+                        progressContainer.style.display = 'none';
+                        
+                        // 显示结果
+                        showResults(data, files);
+                    } catch (error) {
+                        showError(`上传失败: ${error.message}`);
+                    }
+                } else {
+                    showError(`上传失败，服务器响应错误 (${xhr.status})`);
+                }
+            }
+        };
+        
+        // 处理错误
+        xhr.onerror = function() {
+            showError('上传失败，网络错误');
+        };
+        
+        // 发送请求
+        xhr.send(formData);
+    }
+    
+    // 格式化文件大小
+    function formatFileSize(bytes) {
+        if (bytes < 1024) {
+            return bytes + ' B';
+        } else if (bytes < 1024 * 1024) {
+            return (bytes / 1024).toFixed(2) + ' KB';
+        } else {
+            return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+        }
     }
 
     // 显示错误信息
     function showError(message) {
         uploadStatus.textContent = message;
         uploadStatus.className = 'upload-status error';
+        
+        // 隐藏进度条
+        progressContainer.style.display = 'none';
 
         // 震动效果
         dropArea.classList.add('shake');
@@ -465,11 +606,69 @@ function initUpload() {
         fileInput.value = '';
         uploadStatus.textContent = '';
         uploadStatus.className = 'upload-status';
+        
+        // 隐藏进度条
+        progressContainer.style.display = 'none';
 
         // 隐藏结果，显示上传区域
         resultContainer.style.display = 'none';
         dropArea.style.display = 'block';
     });
+}
+
+// 增强移动设备上传体验
+function enableMobileUpload(dropArea, fileInput) {
+    // 添加触摸事件类标识符，用于特定样式
+    document.body.classList.add('touch-device');
+    
+    // 防止移动设备上长按图片出现菜单
+    dropArea.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+    });
+    
+    // 添加触摸反馈效果
+    dropArea.addEventListener('touchstart', () => {
+        dropArea.classList.add('touch-active');
+    });
+    
+    ['touchend', 'touchcancel'].forEach(eventName => {
+        dropArea.addEventListener(eventName, () => {
+            dropArea.classList.remove('touch-active');
+        });
+    });
+    
+    // 优化移动设备点击体验
+    dropArea.addEventListener('touchend', (e) => {
+        // 阻止移动设备上的点击延迟
+        e.preventDefault();
+        // 触发文件选择
+        fileInput.click();
+    });
+    
+    // 优化上传状态反馈
+    const uploadStatusObserver = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'class') {
+                const status = document.getElementById('uploadStatus');
+                // 在状态改变时提供触觉反馈（如果设备支持）
+                if (status.classList.contains('success')) {
+                    if (window.navigator.vibrate) {
+                        window.navigator.vibrate([100, 50, 100]); // 成功振动模式
+                    }
+                } else if (status.classList.contains('error')) {
+                    if (window.navigator.vibrate) {
+                        window.navigator.vibrate([300]); // 错误振动模式
+                    }
+                }
+            }
+        });
+    });
+    
+    // 监听上传状态变化
+    const uploadStatus = document.getElementById('uploadStatus');
+    if (uploadStatus) {
+        uploadStatusObserver.observe(uploadStatus, { attributes: true });
+    }
 }
 
 // 图片预览功能
