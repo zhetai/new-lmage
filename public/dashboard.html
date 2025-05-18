@@ -1266,17 +1266,43 @@
         <main>
             <div class="dashboard-container fade-in-element">
                 <div class="dashboard-header">
-                    <h2 class="dashboard-title">我的图片</h2>
+                    <h1 class="dashboard-title">我的图片</h1>
                     <div class="dashboard-actions">
-                        <a href="/" class="upload-btn">
+                        <button id="uploadBtn" class="btn primary-btn">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                                 <polyline points="17 8 12 3 7 8"></polyline>
                                 <line x1="12" y1="3" x2="12" y2="15"></line>
                             </svg>
-                            上传新图片
-                        </a>
+                            上传图片
+                        </button>
+                        <input type="file" id="dashboardFileInput" class="file-input" accept="image/*" multiple style="display:none;">
+                        <button id="batchActionBtn" class="btn secondary-btn" style="display: none;">
+                            批量操作
+                        </button>
                     </div>
+                </div>
+
+                <!-- 上传区域 (通常隐藏) -->
+                <div id="dashboardUploadArea" class="upload-container" style="display: none;">
+                    <div class="upload-area" id="dashboardDropArea">
+                        <div class="upload-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                        </div>
+                        <p class="upload-text">拖放图片到这里或<span class="browse-text">选择文件</span></p>
+                        <p class="upload-hint">支持批量上传多张图片和<span class="paste-hint">CTRL+V粘贴</span>上传</p>
+                        <div class="upload-status" id="dashboardUploadStatus"></div>
+                    </div>
+                    <button id="closeUploadBtn" class="close-upload-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
                 </div>
 
                 <div class="dashboard-stats">

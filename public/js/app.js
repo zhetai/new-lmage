@@ -251,16 +251,105 @@ function initClipboard() {
 
 // 上传功能
 function initUpload() {
-    // 获取元素
     const dropArea = document.getElementById('dropArea');
     const fileInput = document.getElementById('fileInput');
     const uploadStatus = document.getElementById('uploadStatus');
     const resultContainer = document.getElementById('resultContainer');
+    const uploadAgainBtn = document.getElementById('uploadAgainBtn');
     const previewImage = document.getElementById('previewImage');
     const directLink = document.getElementById('directLink');
     const htmlCode = document.getElementById('htmlCode');
     const mdCode = document.getElementById('mdCode');
-    const uploadAgainBtn = document.getElementById('uploadAgainBtn');
+
+    // 上传完成后再次上传按钮事件
+    uploadAgainBtn.addEventListener('click', () => {
+        resultContainer.style.display = 'none';
+        dropArea.style.display = 'flex';
+    });
+
+    // 防止默认拖放行为
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, preventDefaults, false);
+    });
+
+    // 添加粘贴事件监听
+    document.addEventListener('paste', (e) => {
+        // 检查目标元素，如果是输入框则不处理
+        const target = e.target;
+        if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
+            return; // 不干扰正常的文本粘贴
+        }
+        
+        // 阻止默认粘贴行为
+        e.preventDefault();
+        
+        // 获取剪贴板数据
+        const clipboardData = e.clipboardData || window.clipboardData;
+        const items = clipboardData.items;
+        
+        // 检查是否有图片数据
+        if (!items) return;
+        
+        // 收集所有图片文件
+        const imageFiles = [];
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].type.indexOf('image') !== -1) {
+                const file = items[i].getAsFile();
+                if (file) {
+                    imageFiles.push(file);
+                }
+            }
+        }
+        
+        // 如果收集到图片，则开始上传
+        if (imageFiles.length > 0) {
+            // 显示上传区域（如果当前是隐藏的）
+            resultContainer.style.display = 'none';
+            dropArea.style.display = 'flex';
+            
+            // 处理上传
+            handleFiles(imageFiles);
+            
+            // 显示提示
+            showPasteNotification();
+        }
+    });
+    
+    // 显示粘贴上传提示
+    function showPasteNotification() {
+        // 创建通知元素
+        const notification = document.createElement('div');
+        notification.className = 'paste-notification';
+        notification.innerHTML = '检测到粘贴图片，正在上传...';
+        
+        // 添加到页面
+        document.body.appendChild(notification);
+        
+        // 2秒后移除
+        setTimeout(() => {
+            notification.classList.add('fadeout');
+            setTimeout(() => {
+                notification.remove();
+            }, 500);
+        }, 2000);
+    }
+
+    // 高亮拖放区域
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropArea.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight() {
+        dropArea.classList.add('highlight');
+    }
+
+    function unhighlight() {
+        dropArea.classList.remove('highlight');
+    }
 
     // 点击上传区域触发文件选择
     dropArea.addEventListener('click', (e) => {
@@ -270,30 +359,7 @@ function initUpload() {
         }
     });
 
-    // 监听拖拽事件
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-        dropArea.addEventListener(eventName, preventDefaults, false);
-    });
-
-    function preventDefaults(e) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
-
-    // 拖拽效果
-    ['dragenter', 'dragover'].forEach(eventName => {
-        dropArea.addEventListener(eventName, () => {
-            dropArea.classList.add('drag-over');
-        }, false);
-    });
-
-    ['dragleave', 'drop'].forEach(eventName => {
-        dropArea.addEventListener(eventName, () => {
-            dropArea.classList.remove('drag-over');
-        }, false);
-    });
-
-    // 处理文件拖放
+    // 处理拖放文件
     dropArea.addEventListener('drop', (e) => {
         const files = e.dataTransfer.files;
         if (files.length) {
@@ -503,18 +569,6 @@ function initUpload() {
         dropArea.style.display = 'none';
         resultContainer.style.display = 'block';
     }
-
-    // 再次上传
-    uploadAgainBtn.addEventListener('click', () => {
-        // 清空文件输入
-        fileInput.value = '';
-        uploadStatus.textContent = '';
-        uploadStatus.className = 'upload-status';
-
-        // 隐藏结果，显示上传区域
-        resultContainer.style.display = 'none';
-        dropArea.style.display = 'block';
-    });
 }
 
 // 图片预览功能
