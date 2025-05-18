@@ -2015,18 +2015,17 @@ body.dark-mode .footer {
 
 /* 加载文本动画 */
 .loading-text::after {
-    content: '...';
+    content: "...";
     display: inline-block;
-    animation: ellipsis 1.5s infinite;
-    width: 20px;
+    width: 1em;
     text-align: left;
+    animation: ellipsis 1.5s infinite;
 }
 
 @keyframes ellipsis {
-    0% { content: '.'; }
-    33% { content: '..'; }
-    66% { content: '...'; }
-    100% { content: '.'; }
+    0% { content: "."; }
+    33% { content: ".."; }
+    66% { content: "..."; }
 }
 
 /* 复制按钮状态 */
@@ -2692,4 +2691,47 @@ body.dark-mode .auth-links {
 .auth-links a {
     font-weight: 600;
     text-decoration: underline;
+}
+
+/* 粘贴效果动画 */
+@keyframes pasteEffect {
+    0% { 
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(var(--primary-light-rgb), 0);
+    }
+    50% { 
+        transform: scale(1.03);
+        box-shadow: 0 0 0 15px rgba(var(--primary-light-rgb), 0.4);
+    }
+    100% { 
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(var(--primary-light-rgb), 0);
+    }
+}
+
+.paste-effect {
+    animation: pasteEffect 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 键盘样式 */
+kbd {
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    color: var(--text-color);
+    display: inline-block;
+    font-size: 0.85em;
+    font-weight: 600;
+    line-height: 1;
+    padding: 3px 5px;
+    margin: 0 2px;
+    vertical-align: middle;
+}
+
+body.dark-mode kbd {
+    background-color: var(--dark-card-bg);
+    border-color: var(--dark-border);
+    color: var(--dark-text);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
 }

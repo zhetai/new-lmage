@@ -77,7 +77,69 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 初始化移动端菜单
     initMobileMenu();
+    
+    // 初始化粘贴上传功能
+    initPasteUpload();
 });
+
+// 粘贴上传功能
+function initPasteUpload() {
+    // 添加全局粘贴事件监听
+    document.addEventListener('paste', (e) => {
+        // 检查是否处于上传区域的激活状态
+        const dropArea = document.getElementById('dropArea');
+        const resultContainer = document.getElementById('resultContainer');
+
+        // 如果结果容器显示中，则不处理粘贴事件
+        if (resultContainer && resultContainer.style.display !== 'none') {
+            return;
+        }
+
+        // 获取剪贴板数据
+        const items = e.clipboardData.items;
+        const files = [];
+
+        // 遍历剪贴板项
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].type.indexOf('image') !== -1) {
+                // 获取剪贴板中的图片文件
+                const file = items[i].getAsFile();
+                if (file) {
+                    // 生成一个合理的文件名，因为粘贴的图片可能没有名称
+                    const timestamp = new Date().getTime();
+                    const newFile = new File([file], `pasted-image-${timestamp}.${file.type.split('/')[1] || 'png'}`, {
+                        type: file.type
+                    });
+                    files.push(newFile);
+                }
+            }
+        }
+
+        // 如果有图片文件，处理上传
+        if (files.length > 0) {
+            // 显示上传动画效果
+            dropArea.classList.add('paste-effect');
+            setTimeout(() => {
+                dropArea.classList.remove('paste-effect');
+            }, 500);
+            
+            // 处理图片上传
+            if (window.uploadHandlers && window.uploadHandlers.handleFiles) {
+                window.uploadHandlers.handleFiles(files);
+            } else {
+                console.error('上传处理函数未初始化');
+                const uploadStatus = document.getElementById('uploadStatus');
+                if (uploadStatus) {
+                    uploadStatus.textContent = '上传初始化失败，请刷新页面重试';
+                    uploadStatus.className = 'upload-status error';
+                }
+            }
+            
+            // 阻止默认粘贴行为
+            e.preventDefault();
+        }
+    });
+}
 
 // 滚动动画初始化
 function initScrollAnimations() {
@@ -515,6 +577,12 @@ function initUpload() {
         resultContainer.style.display = 'none';
         dropArea.style.display = 'block';
     });
+
+    // 将handleFiles和showError导出到全局，供粘贴上传功能使用
+    window.uploadHandlers = {
+        handleFiles: handleFiles,
+        showError: showError
+    };
 }
 
 // 图片预览功能
