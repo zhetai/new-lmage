@@ -1317,20 +1317,20 @@ body.dark-mode .footer {
     .features {
         gap: 2rem;
     }
-    
+
     .feature-card {
         width: 170px;
         height: 230px;
     }
-    
+
     .feature-icon {
         margin-bottom: var(--spacing);
     }
-    
+
     .feature-card h3 {
         font-size: 1.2rem;
     }
-    
+
     .feature-card p {
         font-size: 0.9rem;
     }
@@ -1348,7 +1348,7 @@ body.dark-mode .footer {
         align-items: center;
         gap: 2rem;
     }
-    
+
     .feature-card {
         width: 190px;
         height: 254px;
@@ -1615,25 +1615,25 @@ body.dark-mode .footer {
     .upload-text {
         font-size: 0.95rem;
     }
-    
+
     /* 进度条移动端样式 */
     .upload-progress {
         width: 100%;
     }
-    
+
     .progress-container {
         height: 6px;
     }
-    
+
     .progress-text {
         font-size: 12px;
     }
-    
+
     .upload-success {
         flex-direction: column;
         gap: var(--spacing-xs);
     }
-    
+
     .success-icon {
         width: 20px;
         height: 20px;
@@ -2286,44 +2286,44 @@ body.dark-mode .page-loader::before {
 
 /* 新的加载动画 */
 .loader {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: row;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
 }
 
-.slider {
-    overflow: hidden;
-    background-color: white;
-    margin: 0 15px;
-    height: 80px;
-    width: 20px;
-    border-radius: 30px;
-    box-shadow: 15px 15px 20px rgba(0, 0, 0, 0.1), -15px -15px 30px #fff,
-      inset -5px -5px 10px rgba(0, 0, 255, 0.1),
-      inset 5px 5px 10px rgba(0, 0, 0, 0.1);
-    position: relative;
+.loader-slider {
+  overflow: hidden;
+  background-color: white;
+  margin: 0 15px;
+  height: 80px;
+  width: 20px;
+  border-radius: 30px;
+  box-shadow: 15px 15px 20px rgba(0, 0, 0, 0.1), -15px -15px 30px #fff,
+    inset -5px -5px 10px rgba(0, 0, 255, 0.1),
+    inset 5px 5px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
-body.dark-mode .slider {
-    background-color: var(--dark-card-bg);
-    box-shadow: 15px 15px 20px rgba(0, 0, 0, 0.2), -15px -15px 30px rgba(30, 30, 30, 0.5),
-      inset -5px -5px 10px rgba(0, 0, 255, 0.1),
-      inset 5px 5px 10px rgba(0, 0, 0, 0.3);
+body.dark-mode .loader-slider {
+  background-color: var(--dark-card-bg);
+  box-shadow: 15px 15px 20px rgba(0, 0, 0, 0.2), -15px -15px 30px rgba(30, 30, 30, 0.5),
+    inset -5px -5px 10px rgba(0, 0, 255, 0.1),
+    inset 5px 5px 10px rgba(0, 0, 0, 0.3);
 }
 
-.slider::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 20px;
-    width: 20px;
-    border-radius: 100%;
-    box-shadow: inset 0px 0px 0px rgba(0, 0, 0, 0.3), 0px 420px 0 400px var(--primary-color),
-      inset 0px 0px 0px rgba(0, 0, 0, 0.1);
-    animation: animate_2 2.5s ease-in-out infinite;
-    animation-delay: calc(-0.5s * var(--i));
+.loader-slider::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  border-radius: 100%;
+  box-shadow: inset 0px 0px 0px rgba(0, 0, 0, 0.3), 0px 420px 0 400px var(--primary-color),
+    inset 0px 0px 0px rgba(0, 0, 0, 0.1);
+  animation: animate_2 2.5s ease-in-out infinite;
+  animation-delay: calc(-0.5s * var(--i));
 }
 
 @keyframes animate_2 {
@@ -2331,11 +2331,11 @@ body.dark-mode .slider {
       transform: translateY(250px);
       filter: hue-rotate(0deg);
     }
-  
+
     50% {
       transform: translateY(0);
     }
-  
+
     100% {
       transform: translateY(250px);
       filter: hue-rotate(180deg);
@@ -2694,15 +2694,15 @@ body.dark-mode .auth-links {
 
 /* 粘贴效果动画 */
 @keyframes pasteEffect {
-    0% { 
+    0% {
         transform: scale(1);
         box-shadow: 0 0 0 0 rgba(var(--primary-light-rgb), 0);
     }
-    50% { 
+    50% {
         transform: scale(1.03);
         box-shadow: 0 0 0 15px rgba(var(--primary-light-rgb), 0.4);
     }
-    100% { 
+    100% {
         transform: scale(1);
         box-shadow: 0 0 0 0 rgba(var(--primary-light-rgb), 0);
     }
@@ -2847,7 +2847,7 @@ input:checked + .love-heart, input:checked + .love-heart::after, input:checked +
 }
 
 /* 黑暗模式下的心形切换按钮适配 */
-body.dark-mode .love-heart, 
+body.dark-mode .love-heart,
 body.dark-mode .love-heart::after,
 body.dark-mode .love-heart .bottom {
  border-color: hsl(231deg 28% 60%);
@@ -2864,7 +2864,7 @@ body.dark-mode .love-heart .bottom {
 
 /* 翻转卡片登录/注册组件 */
 .wrapper {
-  --input-focus: var(--primary-color);
+  --input-focus: #2d8cf0;
   --font-color: var(--dark-text);
   --font-color-sub: var(--text-light);
   --bg-color: var(--card-bg);
@@ -2895,6 +2895,7 @@ body.dark-mode .wrapper {
   margin: 0 auto;
 }
 
+/* 开关样式 */
 .switch {
   transform: translateY(-200px);
   position: relative;
@@ -2982,10 +2983,10 @@ body.dark-mode .wrapper {
   text-decoration: underline;
 }
 
-/* 卡片 */ 
+/* 卡片 */
 .flip-card__inner {
   width: 300px;
-  height: 380px;
+  height: 350px;
   position: relative;
   background-color: transparent;
   perspective: 1000px;
@@ -3012,13 +3013,14 @@ body.dark-mode .wrapper {
   backface-visibility: hidden;
   background: var(--bg-color);
   gap: 20px;
-  border-radius: var(--radius);
+  border-radius: 5px;
   border: 2px solid var(--main-color);
   box-shadow: 4px 4px var(--main-color);
   width: 100%;
 }
 
 .flip-card__back {
+  width: 100%;
   transform: rotateY(180deg);
 }
 
@@ -3029,14 +3031,12 @@ body.dark-mode .wrapper {
   gap: 20px;
 }
 
-.flip-card .title {
-  margin: 10px 0 20px 0;
+.title {
+  margin: 20px 0 20px 0;
   font-size: 25px;
-  font-weight: 700;
+  font-weight: 900;
   text-align: center;
   color: var(--main-color);
-  background: none;
-  animation: none;
 }
 
 .flip-card__input {
@@ -3047,9 +3047,9 @@ body.dark-mode .wrapper {
   background-color: var(--bg-color);
   box-shadow: 4px 4px var(--main-color);
   font-size: 15px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--font-color);
-  padding: 5px 15px;
+  padding: 5px 10px;
   outline: none;
 }
 
@@ -3063,14 +3063,14 @@ body.dark-mode .wrapper {
 }
 
 .flip-card__btn {
-  margin: 10px 0;
+  margin: 20px 0 20px 0;
   width: 120px;
   height: 40px;
   border-radius: 5px;
   border: 2px solid var(--main-color);
   background-color: var(--bg-color);
   box-shadow: 4px 4px var(--main-color);
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 600;
   color: var(--font-color);
   cursor: pointer;
@@ -3087,19 +3087,27 @@ body.dark-mode .wrapper {
   transform: translate(3px, 3px);
 }
 
+body.dark-mode .slider {
+  background-color: var(--dark-card-bg);
+}
+
+body.dark-mode .slider:before {
+  background-color: var(--dark-card-bg);
+}
+
 @media (max-width: 576px) {
   .wrapper {
     padding: 0 var(--spacing);
   }
-  
+
   .switch {
-    transform: translateY(-200px);
+    transform: translateY(-180px);
   }
-  
+
   .flip-card__inner {
     width: 280px;
   }
-  
+
   .flip-card__input {
     width: 230px;
   }
