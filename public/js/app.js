@@ -1,30 +1,18 @@
 // 页面加载动画
 window.addEventListener('load', () => {
     const pageLoader = document.getElementById('pageLoader');
-    const progressBar = document.getElementById('loaderProgressBar');
+    
+    // 完成加载后延迟一小段时间再隐藏加载器
+    setTimeout(() => {
+        pageLoader.classList.add('loaded');
 
-    // 模拟加载进度
-    let progress = 0;
-    const interval = setInterval(() => {
-        progress += Math.random() * 10;
-        if (progress >= 100) {
-            progress = 100;
-            clearInterval(interval);
-
-            // 完成加载后延迟一小段时间再隐藏加载器
+        // 页面内容淡入动画
+        document.querySelectorAll('.fade-in-element').forEach((el, index) => {
             setTimeout(() => {
-                pageLoader.classList.add('loaded');
-
-                // 页面内容淡入动画
-                document.querySelectorAll('.fade-in-element').forEach((el, index) => {
-                    setTimeout(() => {
-                        el.classList.add('visible');
-                    }, 100 * index);
-                });
-            }, 400);
-        }
-        progressBar.style.width = `${progress}%`;
-    }, 100);
+                el.classList.add('visible');
+            }, 100 * index);
+        });
+    }, 1500);
 });
 
 // 获取认证头
@@ -910,36 +898,21 @@ function initBackToTop() {
 function smoothPageTransition(url) {
     // 获取页面加载动画元素
     const pageLoader = document.getElementById('pageLoader');
-    const progressBar = document.getElementById('loaderProgressBar');
     const pageTransition = document.getElementById('pageTransition');
 
-    if (pageLoader && progressBar) {
+    if (pageLoader) {
         // 先显示页面过渡动画
         if (pageTransition) {
             pageTransition.classList.add('active');
         }
 
-        // 重置进度条
-        progressBar.style.width = '0%';
-
         // 显示加载动画
         pageLoader.classList.remove('loaded');
 
-        // 模拟加载进度
-        let progress = 0;
-        const interval = setInterval(() => {
-            progress += Math.random() * 15;
-            if (progress >= 100) {
-                progress = 100;
-                clearInterval(interval);
-
-                // 完成加载后延迟一小段时间再跳转
-                setTimeout(() => {
-                    window.location.href = url;
-                }, 100);
-            }
-            progressBar.style.width = `${progress}%`;
-        }, 30);
+        // 延迟一小段时间再跳转，让动画显示一段时间
+        setTimeout(() => {
+            window.location.href = url;
+        }, 500);
     } else {
         // 如果找不到加载动画元素，直接跳转
         window.location.href = url;

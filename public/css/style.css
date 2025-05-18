@@ -2281,74 +2281,65 @@ body.dark-mode .page-loader::before {
     justify-content: center;
     text-align: center;
     width: 100%;
-    max-width: 300px;
     margin: 0 auto;
-    animation: fadeInUp 0.8s ease-out;
 }
 
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* 新的加载动画 */
+.loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
 }
 
-.loader-logo {
-    width: 90px;
-    height: 90px;
-    margin-bottom: 30px;
-    animation: pulse-glow 2s infinite alternate;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    object-fit: contain;
-    filter: drop-shadow(0 5px 15px rgba(var(--primary-light-rgb), 0.3));
-}
-
-@keyframes pulse-glow {
-    0% {
-        opacity: 0.8;
-        transform: scale(0.95);
-        filter: drop-shadow(0 5px 15px rgba(var(--primary-light-rgb), 0.2));
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1.05);
-        filter: drop-shadow(0 10px 25px rgba(var(--primary-light-rgb), 0.4));
-    }
-}
-
-.loader-progress {
-    width: 240px;
-    height: 6px;
-    background-color: rgba(var(--primary-light-rgb), 0.1);
-    border-radius: 10px;
+.slider {
     overflow: hidden;
+    background-color: white;
+    margin: 0 15px;
+    height: 80px;
+    width: 20px;
+    border-radius: 30px;
+    box-shadow: 15px 15px 20px rgba(0, 0, 0, 0.1), -15px -15px 30px #fff,
+      inset -5px -5px 10px rgba(0, 0, 255, 0.1),
+      inset 5px 5px 10px rgba(0, 0, 0, 0.1);
     position: relative;
-    margin-left: auto;
-    margin-right: auto;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-body.dark-mode .loader-progress {
-    background-color: rgba(255, 255, 255, 0.05);
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+body.dark-mode .slider {
+    background-color: var(--dark-card-bg);
+    box-shadow: 15px 15px 20px rgba(0, 0, 0, 0.2), -15px -15px 30px rgba(30, 30, 30, 0.5),
+      inset -5px -5px 10px rgba(0, 0, 255, 0.1),
+      inset 5px 5px 10px rgba(0, 0, 0, 0.3);
 }
 
-.loader-progress-bar {
+.slider::before {
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
-    height: 100%;
-    width: 0;
-    background: var(--primary-gradient);
-    border-radius: 10px;
-    transition: width 0.3s ease;
-    box-shadow: 0 0 10px rgba(var(--primary-light-rgb), 0.5);
+    height: 20px;
+    width: 20px;
+    border-radius: 100%;
+    box-shadow: inset 0px 0px 0px rgba(0, 0, 0, 0.3), 0px 420px 0 400px var(--primary-color),
+      inset 0px 0px 0px rgba(0, 0, 0, 0.1);
+    animation: animate_2 2.5s ease-in-out infinite;
+    animation-delay: calc(-0.5s * var(--i));
+}
+
+@keyframes animate_2 {
+    0% {
+      transform: translateY(250px);
+      filter: hue-rotate(0deg);
+    }
+  
+    50% {
+      transform: translateY(0);
+    }
+  
+    100% {
+      transform: translateY(250px);
+      filter: hue-rotate(180deg);
+    }
 }
 
 /* 页面过渡动画 - 现代化设计 */
