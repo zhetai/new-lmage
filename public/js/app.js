@@ -1,7 +1,7 @@
 // 页面加载动画
 window.addEventListener('load', () => {
     const pageLoader = document.getElementById('pageLoader');
-    
+
     // 完成加载后延迟一小段时间再隐藏加载器
     setTimeout(() => {
         pageLoader.classList.add('loaded');
@@ -51,8 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 初始化平滑滚动
     initSmoothScroll();
 
-    // 初始化粒子背景
-    initParticles();
+
 
     // 初始化3D卡片效果
     init3DCards();
@@ -65,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 初始化移动端菜单
     initMobileMenu();
-    
+
     // 初始化粘贴上传功能
     initPasteUpload();
 });
@@ -110,7 +109,7 @@ function initPasteUpload() {
             setTimeout(() => {
                 dropArea.classList.remove('paste-effect');
             }, 500);
-            
+
             // 处理图片上传
             if (window.uploadHandlers && window.uploadHandlers.handleFiles) {
                 window.uploadHandlers.handleFiles(files);
@@ -122,7 +121,7 @@ function initPasteUpload() {
                     uploadStatus.className = 'upload-status error';
                 }
             }
-            
+
             // 阻止默认粘贴行为
             e.preventDefault();
         }
@@ -136,7 +135,6 @@ function initScrollAnimations() {
         { selector: '.feature-card:nth-child(1)', animation: 'from-left' },
         { selector: '.feature-card:nth-child(2)', animation: 'fade-in' },
         { selector: '.feature-card:nth-child(3)', animation: 'from-right' },
-        { selector: '.hero-content', animation: 'scale-in' },
         { selector: '.upload-area', animation: 'from-bottom' }
     ];
 
@@ -205,7 +203,6 @@ function initSmoothScroll() {
 function initPageLoader() {
     // 为主要元素添加淡入动画类
     const fadeElements = [
-        '.hero',
         '.upload-container',
         '.features',
         '.footer'
@@ -400,7 +397,7 @@ function initUpload() {
 
         // 创建 XMLHttpRequest 以便跟踪上传进度
         const xhr = new XMLHttpRequest();
-        
+
         // 监听上传进度
         xhr.upload.addEventListener('progress', (event) => {
             if (event.lengthComputable) {
@@ -412,7 +409,7 @@ function initUpload() {
 
         // 设置请求
         xhr.open('POST', '/upload', true);
-        
+
         // 添加认证头
         if (headers.Authorization) {
             xhr.setRequestHeader('Authorization', headers.Authorization);
@@ -667,81 +664,7 @@ function initImagePreview() {
     }
 }
 
-// 粒子背景初始化
-function initParticles() {
-    const particlesContainer = document.getElementById('particles');
-    if (!particlesContainer) return;
 
-    const particleCount = 50; // 粒子数量
-    const particleColors = ['rgba(255, 255, 255, 0.3)', 'rgba(255, 255, 255, 0.2)', 'rgba(255, 255, 255, 0.1)'];
-
-    // 创建粒子
-    for (let i = 0; i < particleCount; i++) {
-        createParticle(particlesContainer, particleColors);
-    }
-
-    // 创建单个粒子
-    function createParticle(container, colors) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-
-        // 随机大小
-        const size = Math.random() * 5 + 2;
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-
-        // 随机位置
-        const posX = Math.random() * 100;
-        const posY = Math.random() * 100;
-        particle.style.left = `${posX}%`;
-        particle.style.top = `${posY}%`;
-
-        // 随机颜色
-        const colorIndex = Math.floor(Math.random() * colors.length);
-        particle.style.backgroundColor = colors[colorIndex];
-
-        // 随机动画
-        const duration = Math.random() * 20 + 10;
-        const delay = Math.random() * 5;
-
-        // 添加动画
-        particle.style.animation = `float ${duration}s ${delay}s infinite linear`;
-
-        // 添加到容器
-        container.appendChild(particle);
-
-        // 创建动画关键帧
-        const keyframes = `
-            @keyframes float {
-                0% {
-                    transform: translate(0, 0) rotate(0deg);
-                    opacity: ${Math.random() * 0.5 + 0.3};
-                }
-                25% {
-                    transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) rotate(${Math.random() * 360}deg);
-                    opacity: ${Math.random() * 0.5 + 0.3};
-                }
-                50% {
-                    transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) rotate(${Math.random() * 360}deg);
-                    opacity: ${Math.random() * 0.5 + 0.3};
-                }
-                75% {
-                    transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) rotate(${Math.random() * 360}deg);
-                    opacity: ${Math.random() * 0.5 + 0.3};
-                }
-                100% {
-                    transform: translate(0, 0) rotate(0deg);
-                    opacity: ${Math.random() * 0.5 + 0.3};
-                }
-            }
-        `;
-
-        // 添加样式
-        const style = document.createElement('style');
-        style.textContent = keyframes;
-        document.head.appendChild(style);
-    }
-}
 
 // 3D卡片效果初始化
 function init3DCards() {
