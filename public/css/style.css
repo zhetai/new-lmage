@@ -1122,84 +1122,90 @@ body.dark-mode .copy-container input {
 
 /* 特性部分 */
 .features {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--spacing-lg);
-    margin: var(--spacing-xl) 0;
-    max-width: 1000px;
-    margin-left: auto;
-    margin-right: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 3rem;
+    margin-top: var(--spacing-xl);
+    padding: 0 var(--spacing-lg);
 }
 
 .feature-card {
-    background-color: var(--card-bg);
-    padding: var(--spacing-lg);
-    border-radius: var(--radius-lg);
-    text-align: center;
-    box-shadow: var(--shadow);
-    transition: all var(--transition);
+    width: 190px;
+    height: 254px;
+    background: var(--dark-card-bg);
     position: relative;
+    display: flex;
+    flex-direction: column;
+    place-content: center;
+    place-items: center;
     overflow: hidden;
-    z-index: 1;
-    border: 1px solid transparent;
-    transform-style: preserve-3d;
-    perspective: 1000px;
+    border-radius: 20px;
+    margin: 0 auto;
+    transition: all var(--transition);
 }
 
 body.dark-mode .feature-card {
-    background-color: var(--dark-card-bg);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    background: #07182E;
+}
+
+.feature-card h3 {
+    z-index: 1;
+    color: white;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing);
+    position: relative;
+}
+
+.feature-card p {
+    color: var(--text-light);
+    line-height: 1.6;
+    font-size: 1rem;
+    z-index: 1;
+    padding: 0 var(--spacing);
+    text-align: center;
+}
+
+body.dark-mode .feature-card p {
+    color: white;
 }
 
 .feature-card::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(var(--primary-light-rgb), 0.05), rgba(var(--primary-dark-rgb), 0.05));
-    opacity: 0;
-    transition: opacity var(--transition);
-    z-index: -1;
+    width: 100px;
+    background-image: linear-gradient(180deg, rgb(0, 183, 255), rgb(255, 48, 255));
+    height: 130%;
+    animation: rotBGimg 3s linear infinite;
+    transition: all 0.2s linear;
+}
+
+@keyframes rotBGimg {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .feature-card::after {
     content: '';
     position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(var(--primary-light-rgb), 0.08) 0%, transparent 70%);
-    opacity: 0;
-    transform: scale(0.5);
-    transition: all 0.5s ease;
-    z-index: -1;
+    background: var(--dark-card-bg);
+    inset: 5px;
+    border-radius: 15px;
 }
 
-.feature-card:hover {
-    transform: translateY(-8px) rotateX(3deg) rotateY(3deg);
-    box-shadow: var(--shadow-lg);
-    border-color: rgba(var(--primary-light-rgb), 0.1);
+body.dark-mode .feature-card::after {
+    background: #07182E;
 }
 
 .feature-card:hover::before {
-    opacity: 1;
-}
-
-.feature-card:hover::after {
-    opacity: 1;
-    transform: scale(1);
-}
-
-.feature-card .card-content {
-    transition: transform var(--transition);
-    transform: translateZ(0);
-}
-
-.feature-card:hover .card-content {
-    transform: translateZ(10px);
+    background-image: linear-gradient(180deg, rgb(81, 255, 0), purple);
+    animation: rotBGimg 3.5s linear infinite;
 }
 
 .feature-icon {
@@ -1210,29 +1216,45 @@ body.dark-mode .feature-card {
     position: relative;
     z-index: 2;
     transition: all var(--transition);
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
-    background: linear-gradient(135deg, rgba(var(--primary-light-rgb), 0.1), rgba(var(--primary-dark-rgb), 0.1));
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.feature-icon svg {
+    color: white;
+    transition: all var(--transition);
+    width: 35px;
+    height: 35px;
+}
+
+body.dark-mode .feature-icon svg {
+    color: white;
 }
 
 .feature-card:hover .feature-icon {
     transform: scale(1.1);
-    background: linear-gradient(135deg, rgba(var(--primary-light-rgb), 0.2), rgba(var(--primary-dark-rgb), 0.2));
-}
-
-.feature-icon svg {
-    color: var(--primary-color);
-    transition: all var(--transition);
-}
-
-body.dark-mode .feature-icon svg {
-    color: var(--primary-light);
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .feature-card:hover .feature-icon svg {
     transform: scale(1.1);
-    color: var(--primary-dark);
+    color: rgb(81, 255, 0);
+}
+
+.feature-icon::after {
+    content: none;
+}
+
+.feature-card .card-content {
+    transition: transform var(--transition);
+    transform: translateZ(0);
+    z-index: 1;
+}
+
+.feature-card:hover .card-content {
+    transform: translateZ(10px);
 }
 
 .feature-icon::after {
@@ -1252,25 +1274,6 @@ body.dark-mode .feature-icon svg {
 .feature-card:hover .feature-icon::after {
     transform: scale(1.2);
     opacity: 0.8;
-}
-
-.feature-card h3 {
-    margin-bottom: var(--spacing);
-    color: var(--primary-color);
-    font-size: 1.3rem;
-    font-weight: 700;
-    position: relative;
-    display: inline-block;
-}
-
-.feature-card p {
-    color: var(--text-light);
-    line-height: 1.6;
-    font-size: 1rem;
-}
-
-body.dark-mode .feature-card p {
-    color: var(--dark-text-light);
 }
 
 /* 页脚 */
@@ -1312,38 +1315,43 @@ body.dark-mode .footer {
 /* 响应式设计 */
 @media (max-width: 992px) {
     .features {
-        grid-template-columns: repeat(3, 1fr);
-        gap: var(--spacing);
+        gap: 2rem;
     }
-
+    
     .feature-card {
-        padding: var(--spacing);
+        width: 170px;
+        height: 230px;
     }
-
+    
     .feature-icon {
-        width: 70px;
-        height: 70px;
+        margin-bottom: var(--spacing);
     }
-
-    .feature-icon svg {
-        width: 35px;
-        height: 35px;
-    }
-
+    
     .feature-card h3 {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
     }
-
+    
     .feature-card p {
         font-size: 0.9rem;
     }
+}
 
-    .hero h2 {
-        font-size: 2.5rem;
+@media (max-width: 768px) {
+    .features {
+        gap: 1.5rem;
     }
+}
 
-    .hero p {
-        font-size: 1.2rem;
+@media (max-width: 576px) {
+    .features {
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+    }
+    
+    .feature-card {
+        width: 190px;
+        height: 254px;
     }
 }
 
