@@ -168,6 +168,7 @@ async function validateToken() {
 function initLoginForm() {
     const loginForm = document.getElementById('loginForm');
     const loginError = document.getElementById('loginError');
+    const authToggle = document.getElementById('authToggle');
 
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
@@ -215,26 +216,39 @@ function initLoginForm() {
 // 注册表单处理
 function initRegisterForm() {
     const registerForm = document.getElementById('registerForm');
-    const registerError = document.getElementById('registerError');
+    const loginError = document.getElementById('loginError');
+    const authToggle = document.getElementById('authToggle');
 
     if (registerForm) {
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // 获取表单数据
-            const username = document.getElementById('username').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
+            // 获取表单数据 - 适应新的注册表单字段ID
+            const username = document.getElementById('regUsername') ? 
+                document.getElementById('regUsername').value : 
+                document.getElementById('username').value;
+            
+            const email = document.getElementById('regEmail') ? 
+                document.getElementById('regEmail').value : 
+                document.getElementById('email').value;
+            
+            const password = document.getElementById('regPassword') ? 
+                document.getElementById('regPassword').value : 
+                document.getElementById('password').value;
+            
+            // 确认密码可能不存在于新表单中
+            const confirmPassword = document.getElementById('confirmPassword') ? 
+                document.getElementById('confirmPassword').value : 
+                password; // 如果没有确认密码字段，使用密码值
 
             // 验证输入
-            if (!username || !email || !password || !confirmPassword) {
-                showError(registerError, '所有字段都是必填项');
+            if (!username || !email || !password) {
+                showError(loginError, '所有字段都是必填项');
                 return;
             }
 
-            if (password !== confirmPassword) {
-                showError(registerError, '两次输入的密码不一致');
+            if (confirmPassword && password !== confirmPassword) {
+                showError(loginError, '两次输入的密码不一致');
                 return;
             }
 
@@ -258,10 +272,13 @@ function initRegisterForm() {
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('user', JSON.stringify(data.user));
 
+                // 显示成功消息
+                alert('注册成功！');
+
                 // 重定向到首页
                 smoothPageTransition('/');
             } catch (error) {
-                showError(registerError, error.message);
+                showError(loginError, error.message);
             }
         });
     }
@@ -300,11 +317,24 @@ function showError(element, message) {
     if (element) {
         element.textContent = message;
         element.style.display = 'block';
+        element.classList.add('show');
 
-        // 5秒后自动隐藏
+        // 添加震动效果
+        element.classList.add('shake');
         setTimeout(() => {
-            element.style.display = 'none';
+            element.classList.remove('shake');
+        }, 500);
+
+        // 5秒后自动隐藏错误
+        setTimeout(() => {
+            element.classList.remove('show');
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 300);
         }, 5000);
+    } else {
+        // 如果没有找到错误元素，回退到alert
+        alert(message);
     }
 }
 
