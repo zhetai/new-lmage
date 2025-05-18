@@ -221,8 +221,7 @@ function initPageLoader() {
 // 主题切换功能
 function initTheme() {
     const themeToggle = document.getElementById('themeToggle');
-    const darkIcon = document.getElementById('darkIcon');
-    const lightIcon = document.getElementById('lightIcon');
+    const switchCheckbox = document.getElementById('switch');
     const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
 
     // 检查本地存储中的主题设置
@@ -231,26 +230,20 @@ function initTheme() {
     // 根据保存的主题或系统偏好设置初始主题
     if (savedTheme === 'dark' || (!savedTheme && prefersDarkScheme.matches)) {
         document.body.classList.add('dark-mode');
-        darkIcon.style.display = 'none';
-        lightIcon.style.display = 'block';
+        switchCheckbox.checked = true; // 右侧位置表示黑夜模式
     } else {
         document.body.classList.remove('dark-mode');
-        darkIcon.style.display = 'block';
-        lightIcon.style.display = 'none';
+        switchCheckbox.checked = false; // 左侧位置表示白天模式
     }
 
     // 主题切换事件
-    themeToggle.addEventListener('click', () => {
+    switchCheckbox.addEventListener('change', () => {
         document.body.classList.toggle('dark-mode');
 
         if (document.body.classList.contains('dark-mode')) {
             localStorage.setItem('theme', 'dark');
-            darkIcon.style.display = 'none';
-            lightIcon.style.display = 'block';
         } else {
             localStorage.setItem('theme', 'light');
-            darkIcon.style.display = 'block';
-            lightIcon.style.display = 'none';
         }
     });
 
@@ -259,12 +252,10 @@ function initTheme() {
         if (!localStorage.getItem('theme')) {
             if (e.matches) {
                 document.body.classList.add('dark-mode');
-                darkIcon.style.display = 'none';
-                lightIcon.style.display = 'block';
+                switchCheckbox.checked = true;
             } else {
                 document.body.classList.remove('dark-mode');
-                darkIcon.style.display = 'block';
-                lightIcon.style.display = 'none';
+                switchCheckbox.checked = false;
             }
         }
     });
