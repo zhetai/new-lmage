@@ -2884,7 +2884,6 @@ body.dark-mode .wrapper {
   --bg-color-alt: var(--dark-border);
 }
 
-/* 切换卡片 */
 .card-switch {
   position: relative;
   display: flex;
@@ -2897,15 +2896,15 @@ body.dark-mode .wrapper {
 }
 
 .switch {
+  transform: translateY(-200px);
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 30px;
-  width: 60px;
-  height: 30px;
-  transform: translateY(-210px);
+  width: 50px;
+  height: 20px;
   z-index: 10;
 }
 
@@ -2913,7 +2912,7 @@ body.dark-mode .wrapper {
   position: absolute;
   content: '登录';
   left: -70px;
-  top: 5px;
+  top: 0;
   width: 100px;
   text-decoration: underline;
   color: var(--font-color);
@@ -2924,7 +2923,7 @@ body.dark-mode .wrapper {
   position: absolute;
   content: '注册';
   left: 70px;
-  top: 5px;
+  top: 0;
   width: 100px;
   text-decoration: none;
   color: var(--font-color);
@@ -2961,7 +2960,7 @@ body.dark-mode .wrapper {
   border: 2px solid var(--main-color);
   border-radius: 5px;
   left: -2px;
-  bottom: 4px;
+  bottom: 2px;
   background-color: var(--bg-color);
   box-shadow: 0 3px 0 var(--main-color);
   transition: 0.3s;
