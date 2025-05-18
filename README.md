@@ -7,8 +7,8 @@
 
   <p>
     <a href="#-特性"><img src="https://img.shields.io/badge/特性-Features-blue?style=for-the-badge&logo=telegram" alt="特性"></a>
-    <a href="#部署指南"><img src="https://img.shields.io/badge/部署-Deploy-orange?style=for-the-badge&logo=cloudflare" alt="部署"></a>
-    <a href="#使用方法"><img src="https://img.shields.io/badge/使用-Usage-green?style=for-the-badge&logo=bookstack" alt="使用"></a>
+    <a href="#-部署指南"><img src="https://img.shields.io/badge/部署-Deploy-orange?style=for-the-badge&logo=cloudflare" alt="部署"></a>
+    <a href="#-使用方法"><img src="https://img.shields.io/badge/使用-Usage-green?style=for-the-badge&logo=bookstack" alt="使用"></a>
     <a href="#-更新日志"><img src="https://img.shields.io/badge/更新-Changelog-red?style=for-the-badge&logo=git" alt="更新"></a>
   </p>
 </div>
@@ -25,17 +25,21 @@
 
 ## ✨ 特性
 
+<div align="center">
+
 | 🚀 快速上传与全球加速 | 📦 无限空间 | 📸 原图保真 |
 |:----------------------:|:------------:|:------------:|
 | 优化的上传流程，使用CDN加速全球访问，快速响应，即时处理 | 基于Telegram强大的存储能力，无容量限制，永久保存 | 保持原始质量，不压缩，确保图片完美呈现 |
 
 | 🎨 现代化界面 | 👍 用户友好 | 🔄 批量上传 |
 |:------------:|:------------:|:------------------:|
-| 精美的UI设计，支持暗色模式，响应式布局适配各种设备 | 拖放上传，一键复制链接，支持多种格式，操作简单直观 | 支持同时选择或拖放多张图片，提高工作效率 |
+| 精美的UI设计，支持暗色模式，响应式布局适配各种设备 | 拖放上传，粘贴上传，一键复制链接，操作简单直观 | 支持同时选择、拖放或粘贴多张图片，提高工作效率 |
 
 | 🔐 用户认证 | 👤 用户系统 | 🏷️ 图片管理 |
 |:------------:|:------------:|:------------:|
 | 基于JWT的安全认证机制，保护账户安全 | 支持用户注册、登录，管理个人上传的图片，保护隐私 | 支持图片列表、删除、重命名、标签管理和搜索功能 |
+
+</div>
 
 ## 🚀 部署指南
 
@@ -66,8 +70,8 @@
 <summary><b>1. 克隆仓库</b></summary>
 
 ```bash
-git clone https://github.com/your-username/tg-image.git
-cd tg-image
+git clone https://github.com/xiyewuqiu/new-lmage.git
+cd new-lmage
 ```
 </details>
 
@@ -145,14 +149,14 @@ npm run deploy
   <img src="https://img.shields.io/badge/无需注册-直接上传-success?style=for-the-badge" alt="无需注册">
 </div>
 
-<table>
+<table align="center">
   <tr>
     <td align="center">1️⃣</td>
     <td>访问你的网站</td>
   </tr>
   <tr>
     <td align="center">2️⃣</td>
-    <td>拖放单张或多张图片到上传区域，或点击选择文件</td>
+    <td>拖放单张或多张图片到上传区域，或点击选择文件，也可直接 Ctrl+V 粘贴图片</td>
   </tr>
   <tr>
     <td align="center">3️⃣</td>
@@ -185,7 +189,7 @@ npm run deploy
 #### 🖼️ 图片管理
 登录后，点击"我的图片"进入仪表盘，您可以：
 
-<table>
+<table align="center">
   <tr>
     <td align="center">👁️</td>
     <td><b>查看图片</b>：浏览您上传的所有图片，支持分页和排序</td>
@@ -248,7 +252,7 @@ npm run deploy
   </table>
 </div>
 
-## 🛠️ 开发
+## 🛠️ 开发指南
 
 <div align="center">
   <img src="https://img.shields.io/badge/开发环境-Development-brightgreen?style=for-the-badge&logo=visualstudiocode" alt="开发环境">
@@ -273,35 +277,33 @@ npm run deploy
 
 ## 🌟 特色功能
 
-<div class="feature-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-
 <div align="center">
-  <img src="https://img.shields.io/badge/UI/UX-用户体验-blueviolet?style=for-the-badge&logo=figma" alt="UI/UX">
+  <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; margin-bottom: 20px;">
+    <div style="flex: 1; min-width: 300px;">
+      <img src="https://img.shields.io/badge/UI/UX-用户体验-blueviolet?style=for-the-badge&logo=figma" alt="UI/UX">
 
-  | 功能 | 描述 |
-  |:----:|:-----|
-  | 🌓 **暗色模式** | 自动适应系统设置，也可手动切换，保护眼睛 |
-  | 🎭 **3D交互效果** | 卡片悬停时的立体效果，增强视觉体验 |
-  | ✨ **粒子动画背景** | 动态视觉效果增强，提升页面美观度 |
-  | 📱 **响应式设计** | 完美适配各种设备尺寸，从手机到桌面 |
-  | 🔄 **滚动动画** | 页面元素随滚动平滑显示，提升交互体验 |
-</div>
+      | 功能 | 描述 |
+      |:----:|:-----|
+      | 🌓 **暗色模式** | 自动适应系统设置，也可手动切换，保护眼睛 |
+      | 🎭 **3D交互效果** | 卡片悬停时的立体效果，增强视觉体验 |
+      | ✨ **粒子动画背景** | 动态视觉效果增强，提升页面美观度 |
+      | 📱 **响应式设计** | 完美适配各种设备尺寸，从手机到桌面 |
+      | 🔄 **滚动动画** | 页面元素随滚动平滑显示，提升交互体验 |
+    </div>
 
-<div align="center">
-  <img src="https://img.shields.io/badge/功能-Features-success?style=for-the-badge&logo=cloudflare" alt="功能">
+    <div style="flex: 1; min-width: 300px;">
+      <img src="https://img.shields.io/badge/功能-Features-success?style=for-the-badge&logo=cloudflare" alt="功能">
 
-  | 功能 | 描述 |
-  |:----:|:-----|
-  | 🖼️ **原图保真技术** | 保持原始质量，不压缩，适合摄影作品分享 |
-  | 📚 **批量上传功能** | 一次选择或拖放多张图片同时上传 |
-  | 🔐 **用户认证系统** | 基于JWT的安全认证机制，保护账户安全 |
-  | 🏷️ **图片标签管理** | 为图片添加标签，方便分类和搜索 |
-  | 📊 **个人仪表盘** | 用户可以管理自己上传的所有图片 |
-</div>
+      | 功能 | 描述 |
+      |:----:|:-----|
+      | 🖼️ **原图保真技术** | 保持原始质量，不压缩，适合摄影作品分享 |
+      | 📚 **多方式上传** | 拖放、选择或粘贴图片，支持批量处理 |
+      | 🔐 **用户认证系统** | 基于JWT的安全认证机制，保护账户安全 |
+      | 🏷️ **图片标签管理** | 为图片添加标签，方便分类和搜索 |
+      | 📊 **个人仪表盘** | 用户可以管理自己上传的所有图片 |
+    </div>
+  </div>
 
-</div>
-
-<div align="center">
   <img src="https://img.shields.io/badge/持续更新-Continuous_Updates-red?style=for-the-badge&logo=github" alt="持续更新">
 </div>
 
@@ -313,13 +315,32 @@ npm run deploy
 
 我们非常欢迎社区成员为 TG-Image 项目做出贡献！以下是一些贡献方式：
 
-- **🐛 报告问题**：发现 bug？请[创建 Issue](https://github.com/xiyewuqiu/new-lmage/issues) 告诉我们
-- **✨ 功能建议**：有新功能想法？欢迎提交功能请求
-- **🎨 UI/UX 改进**：我们特别欢迎界面和用户体验方面的改进建议
-- **📝 文档完善**：帮助改进文档，使其更加清晰和完整
-- **💻 代码贡献**：提交 Pull Request 来修复问题或添加新功能
+<table align="center">
+  <tr>
+    <td align="center">🐛</td>
+    <td><b>报告问题</b>：发现 bug？请<a href="https://github.com/xiyewuqiu/new-lmage/issues">创建 Issue</a> 告诉我们</td>
+  </tr>
+  <tr>
+    <td align="center">✨</td>
+    <td><b>功能建议</b>：有新功能想法？欢迎提交功能请求</td>
+  </tr>
+  <tr>
+    <td align="center">🎨</td>
+    <td><b>UI/UX 改进</b>：我们特别欢迎界面和用户体验方面的改进建议</td>
+  </tr>
+  <tr>
+    <td align="center">📝</td>
+    <td><b>文档完善</b>：帮助改进文档，使其更加清晰和完整</td>
+  </tr>
+  <tr>
+    <td align="center">💻</td>
+    <td><b>代码贡献</b>：提交 Pull Request 来修复问题或添加新功能</td>
+  </tr>
+</table>
 
-**贡献流程**：Fork → 修改 → 提交 PR → 审核 → 合并
+<div align="center">
+  <b>贡献流程</b>：Fork → 修改 → 提交 PR → 审核 → 合并
+</div>
 
 ## 📄 许可证
 
@@ -329,36 +350,40 @@ npm run deploy
 
 本项目采用 **GNU Affero通用公共许可证v3.0 (AGPL-3.0) 附加 Commons Clause** 进行许可。
 
-<table>
+<table align="center">
   <tr>
     <th>主要条款</th>
     <th>说明</th>
   </tr>
   <tr>
-    <td>📝 <b>强制开源</b></td>
+    <td align="center">📝 <b>强制开源</b></td>
     <td>任何对本软件的修改或衍生作品必须以相同的许可证（AGPL-3.0）开源</td>
   </tr>
   <tr>
-    <td>🌐 <b>网络使用也视为分发</b></td>
+    <td align="center">🌐 <b>网络使用也视为分发</b></td>
     <td>即使通过网络提供服务，也必须开源您的修改</td>
   </tr>
   <tr>
-    <td>💼 <b>禁止商业使用</b></td>
+    <td align="center">💼 <b>禁止商业使用</b></td>
     <td>根据Commons Clause限制，禁止将本软件或其任何部分用于商业目的</td>
   </tr>
   <tr>
-    <td>📜 <b>专利授权</b></td>
+    <td align="center">📜 <b>专利授权</b></td>
     <td>授予使用者在该软件相关的专利上的权利</td>
   </tr>
   <tr>
-    <td>⚠️ <b>无担保声明</b></td>
+    <td align="center">⚠️ <b>无担保声明</b></td>
     <td>软件按"原样"提供，不提供任何形式的担保</td>
   </tr>
 </table>
 
-详细条款请参阅项目根目录下的LICENSE文件。
+<p align="center">
+  详细条款请参阅项目根目录下的LICENSE文件。
+</p>
 
-> **注意**：如需商业使用，请联系项目作者获取商业许可。
+<div align="center">
+  <b>注意</b>：如需商业使用，请联系项目作者获取商业许可。
+</div>
 
 ## 🙏 致谢
 
@@ -366,7 +391,7 @@ npm run deploy
   <img src="https://img.shields.io/badge/感谢-Thanks-yellow?style=for-the-badge&logo=heart" alt="致谢">
 </div>
 
-<table>
+<table align="center">
   <tr>
     <td align="center">
       <a href="https://telegram.org/" target="_blank">
@@ -407,9 +432,9 @@ npm run deploy
   <img src="https://img.shields.io/badge/联系我们-Contact_Us-blue?style=for-the-badge&logo=minutemailer" alt="联系方式">
 </div>
 
-如有问题或建议，请通过以下方式联系我们:
+<p align="center">如有问题或建议，请通过以下方式联系我们:</p>
 
-<table>
+<table align="center">
   <tr>
     <td align="center">
       <a href="https://github.com/xiyewuqiu/new-lmage/issues" target="_blank">
@@ -430,36 +455,120 @@ npm run deploy
 
 ## 📝 更新日志
 
-### 2025.05.18 更新：
+<div align="center">
+  <img src="https://img.shields.io/badge/持续迭代-Continuous_Improvement-purple?style=for-the-badge&logo=git" alt="更新日志">
+</div>
 
-#### 粘贴上传功能
-- 新增支持Ctrl+V直接粘贴图片上传功能
-- 添加了粘贴上传时的视觉反馈动画效果
-- 优化了键盘快捷键的界面显示样式
-- 对所有上传方式进行了统一处理，确保一致的用户体验
+### 2025.05.18 更新
 
-### 2025.05.14 更新：
+<table align="center">
+  <tr>
+    <th colspan="2">📋 粘贴上传功能</th>
+  </tr>
+  <tr>
+    <td align="center">✨</td>
+    <td>新增支持Ctrl+V直接粘贴图片上传功能</td>
+  </tr>
+  <tr>
+    <td align="center">🎬</td>
+    <td>添加了粘贴上传时的视觉反馈动画效果</td>
+  </tr>
+  <tr>
+    <td align="center">🎮</td>
+    <td>优化了键盘快捷键的界面显示样式</td>
+  </tr>
+  <tr>
+    <td align="center">🔄</td>
+    <td>对所有上传方式进行了统一处理，确保一致的用户体验</td>
+  </tr>
+</table>
 
-#### 用户认证系统
-- 实现了完整的用户注册、登录和会话管理功能
-- 使用 JWT 令牌进行安全认证
-- 添加了用户个人资料页面和设置
+### 2025.05.14 更新
 
-#### 图片管理功能
-- 用户可以查看自己上传的所有图片
-- 支持图片分页显示和排序
-- 实现了图片搜索功能，可按文件名搜索
-- 实现批量上传图片
+<table align="center">
+  <tr>
+    <th colspan="2">🔐 用户认证系统</th>
+  </tr>
+  <tr>
+    <td align="center">🔒</td>
+    <td>实现了完整的用户注册、登录和会话管理功能</td>
+  </tr>
+  <tr>
+    <td align="center">🔑</td>
+    <td>使用 JWT 令牌进行安全认证</td>
+  </tr>
+  <tr>
+    <td align="center">👤</td>
+    <td>添加了用户个人资料页面和设置</td>
+  </tr>
+</table>
 
-#### 移动端优化
-- 修复了移动端菜单按钮显示问题
-- 优化了移动端菜单的交互体验
-- 增强了移动端菜单按钮和关闭按钮的可见性
-- 改进了移动端菜单的层级管理，确保按钮可点击
-- 优化了移动端菜单在不同设备上的显示效果
+<table align="center">
+  <tr>
+    <th colspan="2">🖼️ 图片管理功能</th>
+  </tr>
+  <tr>
+    <td align="center">📊</td>
+    <td>用户可以查看自己上传的所有图片</td>
+  </tr>
+  <tr>
+    <td align="center">📄</td>
+    <td>支持图片分页显示和排序</td>
+  </tr>
+  <tr>
+    <td align="center">🔍</td>
+    <td>实现了图片搜索功能，可按文件名搜索</td>
+  </tr>
+  <tr>
+    <td align="center">📤</td>
+    <td>实现批量上传图片</td>
+  </tr>
+</table>
 
-#### 性能优化
-- 修复了页面加载时的显示问题
-- 优化了加载动画和过渡效果
-- 提高了页面加载速度和响应性
-- 改进了资源加载顺序，减少白屏时间
+<table align="center">
+  <tr>
+    <th colspan="2">📱 移动端优化</th>
+  </tr>
+  <tr>
+    <td align="center">📱</td>
+    <td>修复了移动端菜单按钮显示问题</td>
+  </tr>
+  <tr>
+    <td align="center">👆</td>
+    <td>优化了移动端菜单的交互体验</td>
+  </tr>
+  <tr>
+    <td align="center">👁️</td>
+    <td>增强了移动端菜单按钮和关闭按钮的可见性</td>
+  </tr>
+  <tr>
+    <td align="center">📊</td>
+    <td>改进了移动端菜单的层级管理，确保按钮可点击</td>
+  </tr>
+  <tr>
+    <td align="center">📱</td>
+    <td>优化了移动端菜单在不同设备上的显示效果</td>
+  </tr>
+</table>
+
+<table align="center">
+  <tr>
+    <th colspan="2">⚡ 性能优化</th>
+  </tr>
+  <tr>
+    <td align="center">⚡</td>
+    <td>修复了页面加载时的显示问题</td>
+  </tr>
+  <tr>
+    <td align="center">🎞️</td>
+    <td>优化了加载动画和过渡效果</td>
+  </tr>
+  <tr>
+    <td align="center">🚀</td>
+    <td>提高了页面加载速度和响应性</td>
+  </tr>
+  <tr>
+    <td align="center">📦</td>
+    <td>改进了资源加载顺序，减少白屏时间</td>
+  </tr>
+</table>
